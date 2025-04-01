@@ -24,3 +24,7 @@ CREATE TABLE Sales (
     PRIMARY KEY (Purchase_id, Product_id),
     CONSTRAINT fk_purchase FOREIGN KEY (Purchase_id) REFERENCES Purchases(Purchase_id)
 );
+
+CREATE UNIQUE INDEX idx_user_id ON Users(User_id);
+CREATE INDEX idx_user_country ON Users(User_country);
+
