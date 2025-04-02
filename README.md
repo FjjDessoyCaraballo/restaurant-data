@@ -4,6 +4,16 @@ Wolt assignment for data analyst position
 
 ## How to use
 
+### TASK 1
+
+Create `wolt_mock.db` by running the python script with:
+
+```bash
+python3 dbCreation.py
+```
+
+### TASK 2
+
 First you must create a virtual environment:
 
 ```bash
