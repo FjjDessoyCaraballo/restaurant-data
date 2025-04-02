@@ -16,6 +16,8 @@ CREATE TABLE Purchases (
     CONSTRAINT fk_user FOREIGN KEY (User_id) REFERENCES Users(User_id)
 );
 
+-- choose between VARCHAR and INT
+
 CREATE TABLE Sales (
     Purchase_id                     VARCHAR(255) NOT NULL,
     Product_id                      VARCHAR(255) NOT NULL,
