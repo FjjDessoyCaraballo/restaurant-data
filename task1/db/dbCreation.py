@@ -7,41 +7,9 @@ import uuid
 conn = sqlite3.connect('wolt_mock.db')
 cursor = conn.cursor()
 
-# Create Users table
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Users (
-    User_id TEXT PRIMARY KEY,
-    User_country TEXT,
-    User_device_id TEXT,
-    User_registration_timestamp_utc TEXT,
-    User_first_purchase_timestamp_utc TEXT
-)
-''')
-
-# Create Sales table
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Sales (
-    Purchase_id TEXT PRIMARY KEY,
-    User_id TEXT,
-    Venue_id TEXT,
-    Timestamp_utc TEXT,
-    Total_number_units INTEGER,
-    Value_eur REAL,
-    FOREIGN KEY (User_id) REFERENCES Users(User_id)
-)
-''')
-
-# Create Purchases table
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Purchases (
-    Purchase_id TEXT,
-    Product_id TEXT,
-    Price REAL,
-    Quantity INTEGER,
-    PRIMARY KEY (Purchase_id, Product_id),
-    FOREIGN KEY (Purchase_id) REFERENCES Sales(Purchase_id)
-)
-''')
+with open('../sql/schema/tables.sql', 'r') as sql_file:
+    sql_script = sql_file.read()
+    cursor.executescript(sql_script)
 
 # Sample data generation
 countries = ['Finland', 'Sweden', 'Denmark', 'Germany', 'Estonia', 'Poland', 'Italy', 'Spain']
