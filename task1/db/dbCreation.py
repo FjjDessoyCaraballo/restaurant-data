@@ -31,14 +31,14 @@ for i in range(500):
     country = random.choice(countries)
     device_id = str(uuid.uuid4())
     
-    # Registration date between 2020-01-01 and 2024-12-31
-    reg_date = random_date(datetime(2020, 1, 1), datetime(2024, 12, 31))
+    # Registration dates
+    reg_date = random_date(datetime(2024, 12, 31), datetime(2025, 4, 30))
     reg_date_str = reg_date.strftime('%Y-%m-%d %H:%M:%S')
     
     # 80% of users have made a purchase
     if random.random() < 0.8:
         # First purchase date after registration date but within 90 days
-        max_purchase_date = min(reg_date + timedelta(days=90), datetime(2025, 4, 1))
+        max_purchase_date = min(reg_date + timedelta(days=90), datetime(2025, 4, 30))
         first_purchase_date = random_date(reg_date, max_purchase_date)
         first_purchase_date_str = first_purchase_date.strftime('%Y-%m-%d %H:%M:%S')
     else:
@@ -65,7 +65,7 @@ for i in range(1000):
     first_purchase_date = datetime.strptime(first_purchase_date_str, '%Y-%m-%d %H:%M:%S')
     
     # Purchase date after first purchase date
-    timestamp = random_date(first_purchase_date, datetime(2025, 4, 1))
+    timestamp = random_date(first_purchase_date, datetime(2025, 4, 30))
     timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
     
     # Random number of units between 1 and 10
