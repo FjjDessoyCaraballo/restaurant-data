@@ -12,7 +12,8 @@ with open('../sql/schema/tables.sql', 'r') as sql_file:
     cursor.executescript(sql_script)
 
 # Sample data generation
-countries = ['Finland', 'Sweden', 'Denmark', 'Germany', 'Estonia', 'Poland', 'Italy', 'Spain']
+### GOTTA CHANGE COUNTRY CODES
+countries = ["FIN", "SWE", "DNK", "DEU", "EST", "POL", "ITA", "ESP"]
 venues = [f'venue_{i}' for i in range(1, 21)]  # 20 venues
 products = [f'product_{i}' for i in range(1, 101)]  # 100 products
 
@@ -44,7 +45,7 @@ for i in range(500):
         first_purchase_date_str = None
     
     users.append((user_id, country, device_id, reg_date_str, first_purchase_date_str))
-    
+
 # Insert users
 cursor.executemany('INSERT INTO Users VALUES (?, ?, ?, ?, ?)', users)
 

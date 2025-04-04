@@ -1,14 +1,14 @@
 -- Table creation
 
 CREATE TABLE Users (
-    User_id                         VARCHAR(255) NOT NULL PRIMARY KEY,
-    User_country                    CHAR(3) NOT NULL,
-    User_device_id                  VARCHAR(255) NOT NULL,
-    User_registration_timestamp_utc TIMESTAMP NOT NULL,
-    User_first_purchase_timestamp   TIMESTAMP
+    User_id                             VARCHAR(255) NOT NULL PRIMARY KEY,
+    User_country                        CHAR(3) NOT NULL,
+    User_device_id                      VARCHAR(255) NOT NULL,
+    User_registration_timestamp_utc     TIMESTAMP NOT NULL,
+    User_first_purchase_timestamp_utc   TIMESTAMP
 );
 
-CREATE TABLE Purchases (
+CREATE TABLE Sales (
     Purchase_id                     VARCHAR(255) NOT NULL PRIMARY KEY,
     User_id                         VARCHAR(255) NOT NULL,
     Venue_id                        VARCHAR(255) NOT NULL,
@@ -18,9 +18,7 @@ CREATE TABLE Purchases (
     CONSTRAINT fk_user FOREIGN KEY (User_id) REFERENCES Users(User_id)
 );
 
--- choose between VARCHAR and INT
-
-CREATE TABLE Sales (
+CREATE TABLE Purchases (
     Purchase_id                     VARCHAR(255) NOT NULL,
     Product_id                      VARCHAR(255) NOT NULL,
     Price                           DECIMAL(10,2) NOT NULL,
@@ -30,7 +28,3 @@ CREATE TABLE Sales (
 );
 
 CREATE INDEX idx_user_country ON Users(User_country);
-
-
-
-
