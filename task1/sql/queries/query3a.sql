@@ -1,12 +1,18 @@
 -- [Task] Query 3a
 
-SELECT product_id, price
-FROM (
-    SELECT s.Product_id, s.Price,
-           ROW_NUMBER() OVER (PARTITION BY s.Product_id ORDER BY p.Timestamp_utc DESC) AS rn
-    FROM Sales s
-    JOIN Purchases p ON s.Purchase_id = p.Purchase_id
-) sub
-WHERE rn = 1;
-
-
+WITH RankedPurchases AS (
+    SELECT 
+    p.Product_id,
+    p.Price,
+    s.Timestamp_utc,
+    ROW_NUMBER() OVER (PARTITION BY p.Product_id ORDER BY s.Timestamp_utc DESC) as row_num
+    FROM Purchases p
+    JOIN Sales s ON p.Purchase_id = s.Purchase_id
+)
+SELECT 
+    Product_id,
+    Price as most_recent_price,
+    Timestamp_utc as price_timestamp
+FROM RankedPurchases
+WHERE row_num = 1
+ORDER BY Product_id;

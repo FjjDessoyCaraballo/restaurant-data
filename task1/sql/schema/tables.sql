@@ -24,7 +24,7 @@ CREATE TABLE Purchases (
     Price                           DECIMAL(10,2) NOT NULL,
     Quantity                        INT NOT NULL,
     PRIMARY KEY (Purchase_id, Product_id),
-    CONSTRAINT fk_purchase FOREIGN KEY (Purchase_id) REFERENCES Purchases(Purchase_id)
+    CONSTRAINT fk_purchase FOREIGN KEY (Purchase_id) REFERENCES Sales(Purchase_id)
 );
 
 CREATE INDEX idx_user_country ON Users(User_country);
