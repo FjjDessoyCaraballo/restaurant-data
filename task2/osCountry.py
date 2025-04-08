@@ -1,8 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def firstPlot():
+def osCountry(df: dict):
+	
 	return 
-
-
-__init__.py
