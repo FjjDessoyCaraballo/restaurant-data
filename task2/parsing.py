@@ -22,8 +22,14 @@ def loadCsvData(file_path) -> pd.DataFrame:
 def deleteNonPurchasers(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	Delete rows (users) that have never made a single purchase
-	:param df: dataframe
-	:return: sliced dataframe
+	
+	:Parameters:
+	dataframe (df)
+		Unparsed dataframe which the user wants to exclude users that never purchased an item
+
+	:Returns:
+	pd.DataFrame
+		DataFrame without zero purchase count
 	"""
 	return df[df['PURCHASE_COUNT'] > 0]
 
@@ -31,8 +37,12 @@ def sliceByCountry(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	Slice dataframe by selected countries. Considering that FIN, DNK, and GRC
 	consist of 97% of the dataset, we will slice only these countries
-	:param df: dataframe
-	:return: df containing results of country specified in `country`
+	
+	:Parameters:
+	dataframe
+	
+	:Returns:
+	containing results of country specified in `country`
 	"""
 	countries = ['FIN', 'DNK', 'GRC']
 	return df[df['REGISTRATION_COUNTRY'].isin(countries)]
@@ -44,7 +54,9 @@ def parseDf():
 	"""
 	Point of entry for parsing dataframe. User can input the country of leave
 	it blank to get all countries together
-	:country: desired country to view
+	
+	:Returns:
+	Parsed dataframe
 	"""
 	df: pd.DataFrame = loadCsvData(findPath())
 	df = deleteNonPurchasers(df)

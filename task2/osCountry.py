@@ -1,12 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages as pdf
 
 def registrationComparedToOs(df: pd.DataFrame):
 	"""
 	Filter to extract two variables to visualize in a table
+	
 	:param df: dataframe
+	
 	:return device_counts: percentage number of users OS by country
+	
 	:return device_abs: absolute number of users OS by country
 	"""
 	reg_country = df['REGISTRATION_COUNTRY']
@@ -56,6 +58,7 @@ def visualizeOsByCountry(device_count, device_abs):
 	plt.tight_layout(pad=3.0)
 	fig.set_tight_layout(True)
 	plt.show()
+	return
 
 def osPlot(df: pd.DataFrame):
 	"""
@@ -63,3 +66,4 @@ def osPlot(df: pd.DataFrame):
 	"""
 	deviceCounts, deviceAbs = registrationComparedToOs(df)
 	visualizeOsByCountry(deviceCounts, deviceAbs)
+	return
