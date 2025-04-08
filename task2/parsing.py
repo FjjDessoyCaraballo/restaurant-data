@@ -27,19 +27,20 @@ def deleteNonPurchasers(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	return df[df['PURCHASE_COUNT'] > 0]
 
-def sliceByCountry(df: pd.DataFrame, country: str) -> pd.DataFrame:
+def sliceByCountry(df: pd.DataFrame) -> pd.DataFrame:
 	"""
-	Slice dataframe by selected country.
+	Slice dataframe by selected countries. Considering that FIN, DNK, and GRC
+	consist of 97% of the dataset, we will slice only these countries
 	:param df: dataframe
-	:param country: country of choice
 	:return: df containing results of country specified in `country`
 	"""
-	return df[df['REGISTRATION_COUNTRY'] == country]
+	countries = ['FIN', 'DNK', 'GRC']
+	return df[df['REGISTRATION_COUNTRY'].isin(countries)]
 
 def removeInconsistentPurchase(df: pd.DataFrame) -> pd.DataFrame:
 	return df[~df['TOTAL_PURCHASES_EUR'].isna()]
 
-def parseDf(country: str):
+def parseDf():
 	"""
 	Point of entry for parsing dataframe. User can input the country of leave
 	it blank to get all countries together
@@ -47,7 +48,6 @@ def parseDf(country: str):
 	"""
 	df: pd.DataFrame = loadCsvData(findPath())
 	df = deleteNonPurchasers(df)
-	# df = removeInconsistentPurchase(df)
-	if country != "":
-		df = sliceByCountry(df, str)
+	df = removeInconsistentPurchase(df)
+	df = sliceByCountry(df)
 	return df
