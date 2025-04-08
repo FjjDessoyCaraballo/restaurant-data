@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages as pdf
 
 def registrationComparedToOs(df: pd.DataFrame):
 	"""
@@ -55,7 +56,6 @@ def visualizeOsByCountry(device_count, device_abs):
 	plt.tight_layout(pad=3.0)
 	fig.set_tight_layout(True)
 	plt.show()
-
 
 def osPlot(df: pd.DataFrame):
 	"""
