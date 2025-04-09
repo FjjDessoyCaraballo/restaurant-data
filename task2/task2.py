@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot
 from osCountry import osPlot
 from parsing import parseDf, findPath, loadCsvData, sliceByCountry
-from osSpending import osBySpending
+from osSpending import spendingByOs
 from conversionOs import conversionByOs
 from firstPurchase import firstPurchase
 
@@ -17,7 +17,12 @@ def main():
 	"""
 	# clean dataframe
 	df: pd.DataFrame = parseDf()
-	firstPurchase(df)
+	
+	# spending
+	spendingByOs(df)
+
+	# Time that it takes from registration day to first purchase
+	# firstPurchase(df)
 
 	# OS by country
 	# osPlot(df)
