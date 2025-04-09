@@ -40,22 +40,22 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 	# form dataframe with extracted information
 	stats = {
 		'web': {
-			'mean': PurchaseWeb.mean().round(2),
-			'median': PurchaseWeb.median().round(2),
-			'25th percentile': PurchaseWeb.quantile(0.25).round(2),
-			'75th percentile': PurchaseWeb.quantile(0.75).round(2)
+			'mean (€)': PurchaseWeb.mean().round(2),
+			'median (€)': PurchaseWeb.median().round(2),
+			'25th percentile (€)': PurchaseWeb.quantile(0.25).round(2),
+			'75th percentile (€)': PurchaseWeb.quantile(0.75).round(2)
 		},
 		'ios': {
-			'mean': PurchaseIos.mean().round(2),
-			'median': PurchaseIos.median().round(2),
-			'25th percentile': PurchaseIos.quantile(0.25).round(2),
-			'75th percentile': PurchaseIos.quantile(0.75).round(2)
+			'mean (€)': PurchaseIos.mean().round(2),
+			'median (€)': PurchaseIos.median().round(2),
+			'25th percentile (€)': PurchaseIos.quantile(0.25).round(2),
+			'75th percentile (€)': PurchaseIos.quantile(0.75).round(2)
 		},
 		'android': {
-			'mean': PurchaseAndroid.mean().round(2),
-			'median': PurchaseAndroid.median().round(2),
-			'25th percentile': PurchaseAndroid.quantile(0.25).round(2),
-			'75th percentile': PurchaseAndroid.quantile(0.75).round(2)
+			'mean (€)': PurchaseAndroid.mean().round(2),
+			'median (€)': PurchaseAndroid.median().round(2),
+			'25th percentile (€)': PurchaseAndroid.quantile(0.25).round(2),
+			'75th percentile (€)': PurchaseAndroid.quantile(0.75).round(2)
 		}
 	}
 
@@ -64,21 +64,45 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 
 	return statsDataframe
 
-def plotPurchaseTable(maxDataFrame: pd.DataFrame, minDataFrame: pd.DataFrame) -> None:
+def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	"""
 	Function to visualize trend of spending through users OS'
-
-	:Parameters:
-	maxDataFrame
-		Dataframe containing information regarding `MAX_PURCHASE_VALUE_EUR` 
 	
 	:Parameters:
-	minDataFrame
+	df
 		Dataframe containing information regarding `MIN_PURCHASE_VALUE_EUR`
+
+	:Parameters:
+	minOrMax
+		String to output correct title on table. There are not safeguards to
+		what is inserted here, so it will display whatever one inserts here.
 
 	:Returns:
 	None
 	"""
+	fig, ax = plt.subplots(figsize=(7,2.5))
+
+	ax.axis('tight')
+	ax.axis('off')
+
+	# Converting first three columns from float to int
+
+	table = ax.table(
+		cellText=df.values,
+		colLabels=df.columns,
+		rowLabels=df.index,
+		cellLoc='center',
+		loc='center'
+	)
+
+	table.auto_set_font_size(False)
+	table.set_fontsize(12)
+	table.scale(0.8, 2.0)
+	plt.title(f"Expenditure stats by platform {minOrMax}", pad=0.5)
+	
+	# layout adjustment
+	plt.tight_layout(pad=1.0)
+	plt.show()
 	return
 
 def	spendingByOs(df: pd.DataFrame):
@@ -88,28 +112,11 @@ def	spendingByOs(df: pd.DataFrame):
 	:Parameters:
 	df
 		Parsed dataframe
+	
+	:Returns:
+	None
 	"""
 	maxDataFrame = minMaxPurchase(df, "min")
 	minDataFrame = minMaxPurchase(df, "max")
-	plotPurchaseTable(maxDataFrame, minDataFrame)
-	return
-
-
-"""
-What are we doing?
-
-Checking how much is spent across OS
-
-columns to be used:
-
-PREFERRED_DEVICE
-
-against 
-
-TOTAL_PURCHASES_EUR
-DISTINCT_PURCHASE_VENUE_COUNT
-MIN_PURCHASE_VALUE_EUR
-MAX_PURCHASE_VALUE_EUR
-AVG_PURCHASE_VALUE_EUR
-
-"""
+	plotPurchaseTable(maxDataFrame, "max")
+	plotPurchaseTable(minDataFrame, "min")

@@ -50,7 +50,10 @@ def visualizeConversionTable(conversionTable: pd.DataFrame):
 	:Returns:
 	fig - table object that can be used later for saving it as pdf or image
 	"""
-	fig, ax = plt.subplots(figsize=(8,2))
+	fig, ax = plt.subplots(figsize=(13,2.5))
+
+	# set title
+	plt.title('Conversion Metrics by Operating System', pad=0.5)
 
 	ax.axis('tight')
 	ax.axis('off')
@@ -74,9 +77,8 @@ def visualizeConversionTable(conversionTable: pd.DataFrame):
 	)
 
 	table.auto_set_font_size(False)
-	table.set_fontsize(8)
-	table.scale(1.2, 2.0)
-	plt.title('Conversion Metrics by Operating System')
+	table.set_fontsize(12)
+	table.scale(1.5, 2.0)
 	plt.tight_layout(pad=3.0)
 	plt.show()
 	return fig

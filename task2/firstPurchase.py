@@ -98,7 +98,7 @@ def visualizeFirstPurchase(df: pd.DataFrame, country: str) -> None:
 
 	# set font size manually
 	table.auto_set_font_size(False)
-	table.set_fontsize(10)
+	table.set_fontsize(12)
 	
 	# set scale of table
 	table.scale(0.7, 1.8)
@@ -115,6 +115,11 @@ def firstPurchase(df: pd.DataFrame, country: str):
 	:Parameters:
 	df
 		Pandas dataframe containing csv file provided previously
+
+	:Parameters:
+	country
+		String that should inform which country one desires to see data
+		from. Options are: FIN, DNK, GRC, and ALL.
 	"""
 
 	# insert new column `DAYS_TO_FIRST_PURCHASE`
@@ -130,8 +135,8 @@ def firstPurchase(df: pd.DataFrame, country: str):
 	# contain most of the original dataframe columns.
 	dfWithBuckets = createBuckets(filteredDf)
 	
-	# 
+	# Visualization of data on table by country (options: FIN, DNK, GRC, ALL)
 	visualizeFirstPurchase(dfWithBuckets, country)
 	
-	#
+	# Not working yet
 	deviceStats(newDfAddedColumn)
