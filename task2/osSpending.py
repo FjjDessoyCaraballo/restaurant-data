@@ -37,25 +37,37 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 	else:
 		print("Error: second parameter can only contain the string [min] or [max] without brackets")
 
+
+	# Safe calculation function to handle potential NaN or empty series
+	def safe_calc(series, func, decimals=2):
+		try:
+			result = func(series)
+			if hasattr(result, 'round'):
+				return result.round(decimals)
+			else:
+				return round(result, decimals)
+		except:
+			return float('nan')  # Return NaN if calculation fails
+
 	# form dataframe with extracted information
 	stats = {
 		'web': {
-			'mean (€)': PurchaseWeb.mean().round(2),
-			'median (€)': PurchaseWeb.median().round(2),
-			'25th percentile (€)': PurchaseWeb.quantile(0.25).round(2),
-			'75th percentile (€)': PurchaseWeb.quantile(0.75).round(2)
+			'mean (€)': safe_calc(PurchaseWeb, lambda x: x.mean()),
+			'median (€)': safe_calc(PurchaseWeb, lambda x: x.median()),
+			'25th percentile (€)': safe_calc(PurchaseWeb, lambda x: x.quantile(0.25)),
+			'75th percentile (€)': safe_calc(PurchaseWeb, lambda x: x.quantile(0.75))
 		},
 		'ios': {
-			'mean (€)': PurchaseIos.mean().round(2),
-			'median (€)': PurchaseIos.median().round(2),
-			'25th percentile (€)': PurchaseIos.quantile(0.25).round(2),
-			'75th percentile (€)': PurchaseIos.quantile(0.75).round(2)
+			'mean (€)': safe_calc(PurchaseIos, lambda x: x.mean()),
+			'median (€)': safe_calc(PurchaseIos, lambda x: x.median()),
+			'25th percentile (€)': safe_calc(PurchaseIos, lambda x: x.quantile(0.25)),
+			'75th percentile (€)': safe_calc(PurchaseIos, lambda x: x.quantile(0.75))
 		},
 		'android': {
-			'mean (€)': PurchaseAndroid.mean().round(2),
-			'median (€)': PurchaseAndroid.median().round(2),
-			'25th percentile (€)': PurchaseAndroid.quantile(0.25).round(2),
-			'75th percentile (€)': PurchaseAndroid.quantile(0.75).round(2)
+			'mean (€)': safe_calc(PurchaseAndroid, lambda x: x.mean()),
+			'median (€)': safe_calc(PurchaseAndroid, lambda x: x.median()),
+			'25th percentile (€)': safe_calc(PurchaseAndroid, lambda x: x.quantile(0.25)),
+			'75th percentile (€)': safe_calc(PurchaseAndroid, lambda x: x.quantile(0.75))
 		}
 	}
 

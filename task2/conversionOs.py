@@ -92,4 +92,5 @@ def conversionByOs(df: pd.DataFrame):
 	    DataFrame parsed previously
 	"""
 	conversionMetric = conversionRate(df)
+	print(conversionMetric)
 	visualizeConversionTable(conversionMetric)
