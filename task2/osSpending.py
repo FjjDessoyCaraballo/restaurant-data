@@ -1,14 +1,42 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def	plotMinPurchase(df: pd.DataFrame):
+	"""
+	Display of table containing `MIN_PURCHASE_VALUE_EUR` and `PREFERRED_DEVICE`
+	
+	:Parameters:
+	df
+		Parsed pandas dataframe
+
+	:Returns:
+	None
+	"""
+	return
+
+def	plotMaxPurchase(df: pd.DataFrame):
+	"""
+	Display of table containing `MAX_PURCHASE_VALUE_EUR` and `PREFERRED_DEVICE`
+	
+	:Parameters:
+	df
+		Parsed pandas dataframe
+
+	:Returns:
+	None
+	"""
+	return
+
 def	osBySpending(df: pd.DataFrame):
 	"""
 	This module will verify the spending across users OS
 	
-	:param df:
-	Parsed dataframe
+	:Parameters:
+	df
+		Parsed dataframe
 	"""
-
+	plotMinPurchase(df)
+	plotMaxPurchase(df)
 	return
 
 

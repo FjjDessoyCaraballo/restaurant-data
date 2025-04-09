@@ -33,8 +33,8 @@ def conversionRate(df: pd.DataFrame):
 	result = result.rename(columns={
 	    'totalUsers': 'Total Users',
 	    'nonPurchasers': 'Zero Purchasers',
+		'purchasers': 'Purchasers',
 	    'conversionRate': 'Conversion Rate (%)',
-	    'purchaserPercentage': 'Purchaser (%)',
 	    'nonPurchaserPercentage': 'Zero Purchases (%)'
 	})
 	return result
@@ -50,13 +50,23 @@ def visualizeConversionTable(conversionTable: pd.DataFrame):
 	:Returns:
 	fig - table object that can be used later for saving it as pdf or image
 	"""
-	fig, ax = plt.subplots(figsize=(11,2))
+	fig, ax = plt.subplots(figsize=(8,2))
 
 	ax.axis('tight')
 	ax.axis('off')
 
+	formattedData = conversionTable.copy()
+
+	# Converting first three columns from float to int
+	for col in formattedData.columns[:3]:
+		formattedData[col] = formattedData[col].astype(int)
+	cellText = []
+	for row in formattedData.values:
+		cellText.append([str(int(row[0])), str(int(row[1])), str(int(row[2])), 
+						  f"{row[3]:.2f}", f"{row[4]:.2f}"])
+
 	table = ax.table(
-		cellText=conversionTable.values.round(2),
+		cellText=cellText,
 		colLabels=conversionTable.columns,
 		rowLabels=conversionTable.index,
 		cellLoc='center',
