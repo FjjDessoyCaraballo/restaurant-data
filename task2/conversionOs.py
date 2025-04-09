@@ -8,7 +8,7 @@ def conversionRate(df: pd.DataFrame):
 	broken down by platform (ios, android, web).
 
 	:Parameters:
-	df : pd.DataFrame
+	df
 	    DataFrame containing `PREFERRED_DEVICE` and `PURCHASE_COUNT` columns
 	
 	:Returns:
@@ -26,12 +26,58 @@ def conversionRate(df: pd.DataFrame):
 	)
 
 	# conversion rate
-	result['conversionRate'] = (result['purchasers'] / result['totalUsers']) * 100
+	result['conversionRate'] = ((result['purchasers'] / result['totalUsers']) * 100).round(2)
+	result['nonPurchaserPercentage'] = ((result['nonPurchasers'] / result['totalUsers']) * 100).round(2)
 
-	result['purchaserPercentage'] = (result['purchasers'] / result['totalUsers']) * 100
-	result['nonPurchaserPercentage'] = (result['nonPurchasers'] / result['totalUsers']) * 100
+	# After creating the result DataFrame
+	result = result.rename(columns={
+	    'totalUsers': 'Total Users',
+	    'nonPurchasers': 'Zero Purchasers',
+	    'conversionRate': 'Conversion Rate (%)',
+	    'purchaserPercentage': 'Purchaser (%)',
+	    'nonPurchaserPercentage': 'Zero Purchases (%)'
+	})
 	return result
 
+def visualizeConversionTable(conversionTable: pd.DataFrame):
+	"""
+	Creates a visual table of conversion metrics using matplotlib.
+
+	:Parameters:
+	conversion_metrics
+	    DataFrame with conversion metrics to display in a table
+	
+	:Returns:
+	fig - table object that can be used later for saving it as pdf or image
+	"""
+	fig, ax = plt.subplots(figsize=(11,2))
+
+	ax.axis('tight')
+	ax.axis('off')
+
+	table = ax.table(
+		cellText=conversionTable.values.round(2),
+		colLabels=conversionTable.columns,
+		rowLabels=conversionTable.index,
+		cellLoc='center',
+		loc='center'
+	)
+
+	table.auto_set_font_size(False)
+	table.set_fontsize(8)
+	table.scale(1.2, 2.0)
+	plt.title('Conversion Metrics by Operating System')
+	plt.tight_layout(pad=3.0)
+	plt.show()
+	return fig
+
 def conversionByOs(df: pd.DataFrame):
+	"""
+	Entry point for calling conversion rate and visualizing functions
+
+	:Parameters:
+	df
+	    DataFrame parsed previously
+	"""
 	conversionMetric = conversionRate(df)
-	print(conversionMetric)
+	visualizeConversionTable(conversionMetric)

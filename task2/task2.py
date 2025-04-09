@@ -1,8 +1,10 @@
 import pandas as pd
+import matplotlib.pyplot
 from osCountry import osPlot
 from parsing import parseDf, findPath, loadCsvData, sliceByCountry
 from osSpending import osBySpending
 from conversionOs import conversionByOs
+from firstPurchase import firstPurchase
 
 def main():
 	"""
@@ -13,20 +15,25 @@ def main():
 
 	The remaining lines are modules that are used for the notebook.
 	"""
-	# original dataframe
-	originalDf: pd.DataFrame = loadCsvData(findPath())
-	originalDf = sliceByCountry(originalDf)
-	conversionByOs(originalDf)
-	exit()
-
 	# clean dataframe
 	df: pd.DataFrame = parseDf()
+	firstPurchase(df)
 
 	# OS by country
-	osPlot(df)
+	# osPlot(df)
+
+	# original dataframe
+	# originalDf: pd.DataFrame = loadCsvData(findPath())
+	# originalDf = sliceByCountry(originalDf)
+	# conversionByOs(originalDf, True)
+
+	# How long it takes for a first purchase
+	 
 
 	# biggest spenders
-	osBySpending(df)
+	# osBySpending(df)
+
+	# next in line: frequency
 
 if __name__ == "__main__":
 	main()

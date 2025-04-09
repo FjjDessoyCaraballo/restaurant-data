@@ -5,35 +5,51 @@ def registrationComparedToOs(df: pd.DataFrame):
 	"""
 	Filter to extract two variables to visualize in a table
 	
-	:param df: dataframe
+	:Parameters:
+	df
+		Pandas dataframe containing csv file provided previously
 	
-	:return device_counts: percentage number of users OS by country
-	
-	:return device_abs: absolute number of users OS by country
+	:Returns (1): 
+	deviceCounts
+		percentage number of users OS by country
+
+	:Returns (2): 	
+	deviceAbs 
+		absolute number of users OS by country
 	"""
 	reg_country = df['REGISTRATION_COUNTRY']
 	device = df['PREFERRED_DEVICE']
 	
 	# percentage of users OS by country
-	device_counts = pd.crosstab(
+	deviceCounts = pd.crosstab(
 		reg_country,
 		device,
 		normalize='index') * 100
 	
 	# brute users OS by country
-	device_abs = pd.crosstab(
+	deviceAbs = pd.crosstab(
 		reg_country,
 		device
 	)
-	return device_counts, device_abs
+	return deviceCounts, deviceAbs
 
-def visualizeOsByCountry(device_count, device_abs):
+def visualizeOsByCountry(deviceCounts, deviceAbs):
 	"""
 	Function that enables visualization of tables
-	"""
-	fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 16))
 
-	device_count.plot(kind='bar', ax=ax1)
+	:Parameters:
+	deviceCounts
+		Percentage value of users device OS
+	
+	:Paramterers:
+	deviceAbs
+		Brute value of users device OS
+
+
+	"""
+	fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 12))
+
+	deviceCounts.plot(kind='bar', ax=ax1)
 	ax1.set_title('Device preference by country (%)', fontsize=14, pad=20)
 	ax1.set_xlabel('Country', fontsize=12)
 	ax1.set_ylabel('Percentage', fontsize=12)
@@ -43,7 +59,7 @@ def visualizeOsByCountry(device_count, device_abs):
 		tick.set_rotation(45)
 
 	ax1.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-	device_abs.plot(kind='bar', ax=ax2)
+	deviceAbs.plot(kind='bar', ax=ax2)
 	ax2.set_title('Device preference by country (absolute)', fontsize=14, pad=20)
 	ax2.set_xlabel('Country', fontsize=12)
 	ax2.set_ylabel('Count', fontsize=12)
@@ -58,12 +74,14 @@ def visualizeOsByCountry(device_count, device_abs):
 	plt.tight_layout(pad=3.0)
 	fig.set_tight_layout(True)
 	plt.show()
-	return
 
 def osPlot(df: pd.DataFrame):
 	"""
-	Staging area to visualize tables of users OS by country
+	Staging area to visualize tables of users OS by country.
+
+	:Parameters:
+	df
+		Pandas dataframe containing csv file provided previously
 	"""
 	deviceCounts, deviceAbs = registrationComparedToOs(df)
 	visualizeOsByCountry(deviceCounts, deviceAbs)
-	return
