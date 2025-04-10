@@ -53,27 +53,32 @@ def countryCount():
 	# copy dataframe
 	dfCopy = df.copy()
 
-
 	# join all other countries that are not in validCountries
 	dfCopy.loc[~dfCopy['REGISTRATION_COUNTRY'].isin(validCountries), \
 			'REGISTRATION_COUNTRY'] = 'Other'
 
-	# count users by country
+	# count users by country and convert to percentages
 	countryCounts = dfCopy['REGISTRATION_COUNTRY'].value_counts()
+	countryPercentages = countryCounts / countryCounts.sum() * 100
 
 	# sort values
-	countryCounts = countryCounts.sort_values(ascending=False)
+	countryPercentages = countryPercentages.sort_values(ascending=False)
 
 	# plot
 	plt.figure(figsize=(12,6))
-	countryCounts.plot(kind='bar', width=0.4, color=plt.cm.viridis(np.linspace(0, 1, len(countryCounts))))
-	plt.title('Number of Users by Country', fontsize=20, pad=15)
+	countryPercentages.plot(kind='bar', width=0.4, color=plt.cm.viridis(np.linspace(0, 1, len(countryPercentages))))
+	plt.title('Percentage of Users by Country', fontsize=20, pad=15)
 	plt.xlabel('Country', fontsize=17)
-	plt.ylabel('Number of Users', fontsize=17)
+	plt.ylabel('Percentage of Users (%)', fontsize=17)
 	plt.xticks(rotation=20, size=15)
 	plt.yticks(size=15)
+
+	# Add percentage labels on top of each bar
+	for i, v in enumerate(countryPercentages):
+		plt.text(i, v + 0.5, f'{v:.1f}%', ha='center', fontsize=12)
+
 	plt.tight_layout()
-	plt.show()	
+	plt.show() 
 
 def visualizeOsByCountry(deviceCounts, deviceAbs):
 	"""
