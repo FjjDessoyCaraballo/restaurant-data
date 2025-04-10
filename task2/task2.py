@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot
 from osCountry import osPlot
 from parsing import parseDf, findPath, loadCsvData, sliceByCountry
-from osSpending import spendingByOs
+from osSpending import minMaxPurchase, scatterPlotTotalPurchases, plotPurchaseTable
 from conversionOs import conversionByOs
 from firstPurchase import firstPurchase
 
@@ -18,23 +18,25 @@ def main():
 	# clean dataframe
 	df: pd.DataFrame = parseDf()
 	
-	# spending
-	# spendingByOs(df)
+	# Uncomment below to view users spending behavior
+	# scatterPlotTotalPurchases(df)
+	# maxDataFrame = minMaxPurchase(df, "min")
+	# minDataFrame = minMaxPurchase(df, "max")
+	# plotPurchaseTable(maxDataFrame, "(MAX_PURCHASE_VALUE_EUR)")
+	# plotPurchaseTable(minDataFrame, "(MIN_PURCHASE_VALUE_EUR)")
 
-	# Time that it takes from registration day to first purchase
+	# Uncomment below to view time that it takes from registration day to first purchase
 	# firstPurchase(df)
 
-	# OS by country
+	# Uncomment line below to view OS by country
 	# osPlot(df)
 
+	# Uncomment lines bellow to view conversion rate
 	# original dataframe
 	# originalDf: pd.DataFrame = loadCsvData(findPath())
 	# originalDf = sliceByCountry(originalDf)
 	# conversionByOs(originalDf, True)
 
-	# How long it takes for a first purchase
-
-	# next in line: frequency
 
 if __name__ == "__main__":
 	main()

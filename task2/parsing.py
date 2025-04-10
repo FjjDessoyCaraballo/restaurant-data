@@ -1,37 +1,33 @@
 import pandas as pd
 import os
 
+validDevices = ["ios", "android", "web"]
+
 def findPath():
 	"""
 	This function returns the directory of the script and csv file
-	:return: the path to the `.csv` file
+	
+	:Returns: 
+	filePath
+		the path to the `.csv` file
 	"""
-	directory_path = os.path.dirname(os.path.abspath(__file__))
-	file_path = os.path.join(directory_path, "dataset_for_datascience_assignment.csv")
-	return file_path
+	directoryPath = os.path.dirname(os.path.abspath(__file__))
+	filePath = os.path.join(directoryPath, "dataset_for_datascience_assignment.csv")
+	return filePath
 
 def loadCsvData(file_path) -> pd.DataFrame:
 	"""
 	Storage of csv in a pandas data type for wrangling
-	:param file_path: the path to the `.csv` file with our data
-	:return: dataframe type pandas `.DataFrame`
+	
+	:Parameters:
+	file_path
+		the path to the `.csv` file with our data
+	
+	:Returns: 
+		pd.DataFrame parsed dataframe
 	"""
 	df: pd.DataFrame = pd.read_csv(file_path)
 	return df
-
-def deleteNonPurchasers(df: pd.DataFrame) -> pd.DataFrame:
-	"""
-	Delete rows (users) that have never made a single purchase
-	
-	:Parameters:
-	dataframe (df)
-		Unparsed dataframe which the user wants to exclude users that never purchased an item
-
-	:Returns:
-	pd.DataFrame
-		DataFrame without zero purchase count
-	"""
-	return df[df['PURCHASE_COUNT'] > 0]
 
 def sliceByCountry(df: pd.DataFrame) -> pd.DataFrame:
 	"""
@@ -40,26 +36,69 @@ def sliceByCountry(df: pd.DataFrame) -> pd.DataFrame:
 	
 	:Parameters:
 	dataframe
+		pd.DataFrame
 	
 	:Returns:
-	containing results of country specified in `country`
+	df
+		pd.DataFrame parsed dataframe
 	"""
 	countries = ['FIN', 'DNK', 'GRC']
 	return df[df['REGISTRATION_COUNTRY'].isin(countries)]
 
-def removeInconsistentPurchase(df: pd.DataFrame) -> pd.DataFrame:
+def removeZeroPurchaseCount(df: pd.DataFrame) -> pd.DataFrame:
+	"""
+	Function to remove rows that contain '0' in the `PURCHASE_COUNT` column
+
+	:Returns:
+	df
+		pd.DataFrame parsed dataframe
+	"""
+	return df[df['PURCHASE_COUNT'] > 0]
+
+def removeNaTotalPurchase(df: pd.DataFrame) -> pd.DataFrame:
+	"""
+	Function to remove rows that contain NA/na/NaN in the `TOTAL_PURCHASES_EUR` column
+
+	:Returns:
+	df
+		pd.DataFrame parsed dataframe
+	"""
 	return df[~df['TOTAL_PURCHASES_EUR'].isna()]
+
+def removeZeroTotalPurchase(df: pd.DataFrame) -> pd.DataFrame:
+	"""
+	Function to remove rows that contain '0' in the `TOTAL_PURCHASES_EUR` column
+
+	:Returns:
+	df
+		pd.DataFrame parsed dataframe
+	"""
+	return df[df['TOTAL_PURCHASES_EUR'] > 0]
+
+def sliceByValidDevice(df: pd.DataFrame) -> pd.DataFrame:
+	"""
+	Function to slice off rows that contain other devices that are not
+	android, ios, and web.
+
+	:Returns:
+	df
+		pd.DataFrame parsed dataframe
+	"""
+	return df[df['PREFERRED_DEVICE'].isin(validDevices)]
 
 def parseDf():
 	"""
-	Point of entry for parsing dataframe. User can input the country of leave
-	it blank to get all countries together
+	Point of entry for parsing dataframe. If one desires to add further parsing,
+	one can add `.pipe()` to the return value with the corresponding new function
+	removing or adding columns.
 	
 	:Returns:
-	Parsed dataframe
+	df
+		pd.DataFrame completely parsed dataframe
 	"""
-	df: pd.DataFrame = loadCsvData(findPath())
-	df = deleteNonPurchasers(df)
-	df = removeInconsistentPurchase(df)
-	df = sliceByCountry(df)
-	return df
+	return (loadCsvData(findPath())
+			.pipe(sliceByCountry)
+			.pipe(sliceByValidDevice)
+			.pipe(removeZeroPurchaseCount)
+			.pipe(removeNaTotalPurchase)
+			.pipe(removeZeroTotalPurchase))

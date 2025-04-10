@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from firstPurchase import filterFirstPurchase
 
 def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 	"""
@@ -117,28 +119,94 @@ def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	plt.show()
 	return
 
-def	spendingByOs(df: pd.DataFrame):
+def scatterPlotTotalPurchases(df: pd.DataFrame, os: str) -> None:
 	"""
-	This module will verify the spending across users OS
-	
+	Function to make a scatterplot to visualize trend between total purchases
+	and days to first purchase.
+
 	:Parameters:
 	df
-		Parsed dataframe
+	    pd.DataFrame that should be parsed beforehand to exclude useless data
 	
 	:Returns:
 	None
 	"""
+	# Apply strict filtering to get meaningful data
+	filteredDf = df.copy()
 
-	# fetch new dataframes with mean, median, 25th, and 75th percentile
-	# insert either "min" (MIN_PURCHASE_VALUE_EUR) or 
-	# "max" (MAX_PURCHASE_VALUE_EUR) to get respective columns
-	maxDataFrame = minMaxPurchase(df, "min")
-	minDataFrame = minMaxPurchase(df, "max")
+	# Select OS
+	if os is not None:
+		filteredDf = filteredDf[filteredDf["PREFERRED_DEVICE"] == f"{os}"]	
+	
+	# add the DAYS_TO_FIRST_PURCHASE column
+	filteredDf = filterFirstPurchase(filteredDf)
 
-	# plot data with new dataframe for max values.
-	# Second parameter is for the title
-	plotPurchaseTable(maxDataFrame, "max")
+	# remove rows with zero or negative values
+	filteredDf = filteredDf[filteredDf['DAYS_TO_FIRST_PURCHASE'] > 0]
+	filteredDf = filteredDf[filteredDf['TOTAL_PURCHASES_EUR'] > 0]
 
-	# plot data with new dataframe for min values.
-	# Second parameter is for the title
-	plotPurchaseTable(minDataFrame, "min")
+	# remove extreme values
+	q1Days = filteredDf['DAYS_TO_FIRST_PURCHASE'].quantile(0.05)
+	q3Days = filteredDf['DAYS_TO_FIRST_PURCHASE'].quantile(0.95)
+	iqrDays = q3Days - q1Days
+
+	q1_purchases = filteredDf['TOTAL_PURCHASES_EUR'].quantile(0.05)
+	q3_purchases = filteredDf['TOTAL_PURCHASES_EUR'].quantile(0.95)
+	iqr_purchases = q3_purchases - q1_purchases
+
+	# remove outliers
+	days_upper = q3Days + 3 * iqrDays
+	purchases_upper = q3_purchases + 3 * iqr_purchases
+
+	filteredDf = filteredDf[filteredDf['DAYS_TO_FIRST_PURCHASE'] <= days_upper]
+	filteredDf = filteredDf[filteredDf['TOTAL_PURCHASES_EUR'] <= purchases_upper]
+
+	# scatterplot creation
+	plt.figure(figsize=(12, 8))
+
+	# creating scatterplot with different density for aesthetic reasons
+	plt.scatter(
+	    filteredDf['DAYS_TO_FIRST_PURCHASE'], 
+	    filteredDf['TOTAL_PURCHASES_EUR'], 
+	    alpha=0.5,
+	    s=30,
+	    color='#3498db'
+	)
+
+	# linear regression
+	z = np.polyfit(filteredDf['DAYS_TO_FIRST_PURCHASE'], filteredDf['TOTAL_PURCHASES_EUR'], 1)
+	p = np.poly1d(z)
+	xLine = np.linspace(filteredDf['DAYS_TO_FIRST_PURCHASE'].min(), filteredDf['DAYS_TO_FIRST_PURCHASE'].max(), 100)
+	plt.plot(xLine, p(xLine), "r--", linewidth=2, alpha=0.8)
+
+	# correlation coefficient
+	corr = filteredDf['DAYS_TO_FIRST_PURCHASE'].corr(filteredDf['TOTAL_PURCHASES_EUR'])
+	plt.annotate(
+		f'Correlation: {corr:.2f}', 
+		xy=(0.05, 0.95), 
+		xycoords='axes fraction',
+		fontsize=12,
+		bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
+	)
+
+	# enhancing readability
+	plt.xlabel('Days to First Purchase', fontsize=12)
+	plt.ylabel('Total Purchases (€)', fontsize=12)
+	plt.title('Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
+	plt.grid(True, alpha=0.3, linestyle='--')
+    
+	# text box
+	statsText = (
+    	f"Data points: {len(filteredDf)}\n"
+    	f"Mean days: {filteredDf['DAYS_TO_FIRST_PURCHASE'].mean():.1f}\n"
+    	f"Mean purchases: {filteredDf['TOTAL_PURCHASES_EUR'].mean():.1f}€"
+    )
+	plt.figtext(0.15, 0.02, statsText, fontsize=10,
+			 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
+    
+	plt.tight_layout()
+	plt.show()
+
+def firstToLastPurchase(df: pd.DataFrame) -> None:
+	
+	return
