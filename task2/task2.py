@@ -19,7 +19,7 @@ def main():
 	df: pd.DataFrame = parseDf()
 	
 	# spending
-	spendingByOs(df)
+	# spendingByOs(df)
 
 	# Time that it takes from registration day to first purchase
 	# firstPurchase(df)
@@ -33,10 +33,6 @@ def main():
 	# conversionByOs(originalDf, True)
 
 	# How long it takes for a first purchase
-	 
-
-	# biggest spenders
-	# osBySpending(df)
 
 	# next in line: frequency
 

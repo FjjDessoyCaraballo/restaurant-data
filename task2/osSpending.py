@@ -128,7 +128,17 @@ def	spendingByOs(df: pd.DataFrame):
 	:Returns:
 	None
 	"""
+
+	# fetch new dataframes with mean, median, 25th, and 75th percentile
+	# insert either "min" (MIN_PURCHASE_VALUE_EUR) or 
+	# "max" (MAX_PURCHASE_VALUE_EUR) to get respective columns
 	maxDataFrame = minMaxPurchase(df, "min")
 	minDataFrame = minMaxPurchase(df, "max")
+
+	# plot data with new dataframe for max values.
+	# Second parameter is for the title
 	plotPurchaseTable(maxDataFrame, "max")
+
+	# plot data with new dataframe for min values.
+	# Second parameter is for the title
 	plotPurchaseTable(minDataFrame, "min")

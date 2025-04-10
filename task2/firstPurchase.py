@@ -1,6 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# make buckets of days
+bins = [0, 1, 7, 14, 30, 60, 90, 180, 365, float('inf')]
+labels = ['Same day', '1-7 days', '8-14 days', '15-30 days', '31-60 days',
+	   '61-90 days', '91-180 days', '181-365 days', '365+ days']
+
 def filterFirstPurchase(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	Function to find the difference between registration date and 
@@ -39,11 +44,6 @@ def createBuckets(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	# copy sliced dataframe
 	dfCopy = df.copy()
-
-	# make buckets of days
-	bins = [0, 1, 7, 14, 30, 60, 90, 180, 365, float('inf')]
-	labels = ['Same day', '1-7 days', '8-14 days', '15-30 days', '31-60 days',
-		   '61-90 days', '91-180 days', '181-365 days', '365+ days']
 	
 	# cut `DAYS_TO_FIRST_PURCHASE` into the buckets
 	dfCopy['PURCHASE_TIME_BUCKET'] = pd.cut(dfCopy['DAYS_TO_FIRST_PURCHASE'], bins=bins, labels=labels, right=False)
@@ -137,6 +137,4 @@ def firstPurchase(df: pd.DataFrame, country: str):
 	
 	# Visualization of data on table by country (options: FIN, DNK, GRC, ALL)
 	visualizeFirstPurchase(dfWithBuckets, country)
-	
-	# Not working yet
-	deviceStats(newDfAddedColumn)
+		
