@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from parsing import loadCsvData, findPath
 
 validCountries = ["FIN", "DNK", "GRC"]
@@ -65,11 +66,12 @@ def countryCount():
 
 	# plot
 	plt.figure(figsize=(12,6))
-	countryCounts.plot(kind='bar')
-	plt.title('Number of Users by Country', fontsize=20)
+	countryCounts.plot(kind='bar', width=0.4, color=plt.cm.viridis(np.linspace(0, 1, len(countryCounts))))
+	plt.title('Number of Users by Country', fontsize=20, pad=15)
 	plt.xlabel('Country', fontsize=17)
 	plt.ylabel('Number of Users', fontsize=17)
 	plt.xticks(rotation=20, size=15)
+	plt.yticks(size=15)
 	plt.tight_layout()
 	plt.show()	
 
