@@ -49,7 +49,7 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 			else:
 				return round(result, decimals)
 		except:
-			return float('nan')  # Return NaN if calculation fails
+			return float('nan')
 
 	# form dataframe with extracted information
 	stats = {
