@@ -42,6 +42,12 @@ python3 dbCreation.py
 
 This line creates the database named `wolt_mock.db` using the tables from `tables.sql` inside `task1/sql/schema/`. Afterwards you can test the queries using the following commands (considering that you are in the same directory as the db)
 
+Be sure to have SQLite3 installed on your device. Run this line for linux ubuntu:
+
+```bash
+sudo apt install sqlite3
+```
+
 ```bash
 sqlite3 wolt_mock.db < ../sql/queries/query1.sql
 sqlite3 wolt_mock.db < ../sql/queries/query2.sql

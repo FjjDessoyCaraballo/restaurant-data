@@ -99,8 +99,6 @@ def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	ax.axis('tight')
 	ax.axis('off')
 
-	# Converting first three columns from float to int
-
 	table = ax.table(
 		cellText=df.values,
 		colLabels=df.columns,

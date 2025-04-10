@@ -102,3 +102,6 @@ def parseDf():
 			.pipe(removeZeroPurchaseCount)
 			.pipe(removeNaTotalPurchase)
 			.pipe(removeZeroTotalPurchase))
+
+
+
