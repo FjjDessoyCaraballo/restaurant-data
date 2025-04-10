@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from parsing import loadCsvData, findPath
+
+validCountries = ["FIN", "DNK", "GRC"]
 
 def registrationComparedToOs(df: pd.DataFrame):
 	"""
@@ -32,6 +35,43 @@ def registrationComparedToOs(df: pd.DataFrame):
 		device
 	)
 	return deviceCounts, deviceAbs
+
+def countryCount():
+	"""
+	Filter and plot origin of users
+	
+	:Parameters:
+	None
+	
+	:Returns:
+	None
+	"""
+	# load dataframe not parsed
+	df: pd.DataFrame = loadCsvData(findPath())
+
+	# copy dataframe
+	dfCopy = df.copy()
+
+
+	# join all other countries that are not in validCountries
+	dfCopy.loc[~dfCopy['REGISTRATION_COUNTRY'].isin(validCountries), \
+			'REGISTRATION_COUNTRY'] = 'Other'
+
+	# count users by country
+	countryCounts = dfCopy['REGISTRATION_COUNTRY'].value_counts()
+
+	# sort values
+	countryCounts = countryCounts.sort_values(ascending=False)
+
+	# plot
+	plt.figure(figsize=(12,6))
+	countryCounts.plot(kind='bar')
+	plt.title('Number of Users by Country', fontsize=20)
+	plt.xlabel('Country', fontsize=17)
+	plt.ylabel('Number of Users', fontsize=17)
+	plt.xticks(rotation=20, size=15)
+	plt.tight_layout()
+	plt.show()	
 
 def visualizeOsByCountry(deviceCounts, deviceAbs):
 	"""
