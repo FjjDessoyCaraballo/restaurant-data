@@ -35,8 +35,11 @@ def conversionRate(df: pd.DataFrame):
 	    'nonPurchasers': 'Zero Purchasers',
 		'purchasers': 'Purchasers',
 	    'conversionRate': 'Conversion Rate (%)',
-	    'nonPurchaserPercentage': 'Zero Purchases (%)'
+	    'nonPurchaserPercentage': 'Zero Purchases (%)',
 	})
+
+	pd.DataFrame(result)
+
 	return result
 
 def visualizeConversionTable(conversionTable: pd.DataFrame):

@@ -5,6 +5,18 @@ from parsing import parseDf
 listOfPlatforms = ["ios", "android", "web"]
 listOfCountries = ["FIN", "DNK", "GRC"]
 
+# safe calculation function to handle potential NaN or empty series
+# in case of failure it returns nan
+def safeCalculation(series, func, decimals=2):
+	try:
+		result = func(series)
+		if hasattr(result, 'round'):
+			return result.round(decimals)
+		else:
+			return round(result, decimals)
+	except:
+		return float('nan')
+
 def totalUsers(argument: str) -> int:
 	"""
 	Function to calculate and return the total number of users by
@@ -26,30 +38,55 @@ def totalUsers(argument: str) -> int:
 	else:
 		return -1
 
-def diffBetweenFirstAndLastPurchase(df: pd.DataFrame) -> pd.DataFrame:
+def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.DataFrame:
 	"""
-	Function 
+	Function to view data measuring on active users. An active users is characterized
+	as someone that has made at least one purchase. Inside the active users group there
+	is another group of single day users; single day users are people that have only made
+	a single purchase and therefore `FIRST_PURCHASE_DATE` and `LAST_PURCHASE_DATE` sums
+	up to zero.
 
 	:Parameters:
 	df
 		pd.DataFrame parsed dataframe
 
+	:Parameters:
+	country
+		string that should contain desired country to visualize. Available countries
+		are FIN, DNK, and GRC. Leave blank to view all.
+
 	:Returns:
 	df
 		pd.DataFrame parsed dataframe containing new column `DIFF_FROM_FIRST_TO_LAST`
 	"""
+	# find if string `country` is in the list of valid countries
+	if country in listOfCountries:
+		dfCountry = (df[df['REGISTRATION_COUNTRY'] == country]).copy()
+	elif country == None:
+		dfCountry = df.copy()
+	else:
+		print("Error: no such country")
+		return None
+
+	if country == "DNK":
+		country = "Denmark"
+	elif country == "FIN":
+		country = "Finland"
+	else:
+		country = "Greece"
+
 	# get difference from first to last day
-	firstPurchase = pd.to_datetime(df['FIRST_PURCHASE_DAY'].str[:10])
-	lastPurchase = pd.to_datetime(df['LAST_PURCHASE_DAY'].str[:10])
+	firstPurchase = pd.to_datetime(dfCountry['FIRST_PURCHASE_DAY'].str[:10])
+	lastPurchase = pd.to_datetime(dfCountry['LAST_PURCHASE_DAY'].str[:10])
 	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days
 
 	# create new column
-	df['DIFF_FROM_FIRST_TO_LAST'] = daysBetweenPurchases
+	dfCountry['DIFF_FROM_FIRST_TO_LAST'] = daysBetweenPurchases
 
 	# separate by OS using boolean mask
-	dfIos = (df[df['PREFERRED_DEVICE'] == "ios"])
-	dfAndroid = (df[df['PREFERRED_DEVICE'] == "android"])
-	dfWeb = (df[df['PREFERRED_DEVICE'] == "web"])
+	dfIos = (dfCountry[dfCountry['PREFERRED_DEVICE'] == "ios"])
+	dfAndroid = (dfCountry[dfCountry['PREFERRED_DEVICE'] == "android"])
+	dfWeb = (dfCountry[dfCountry['PREFERRED_DEVICE'] == "web"])
 
 	# extract column with differences series
 	differenceIos = dfIos['DIFF_FROM_FIRST_TO_LAST']
@@ -60,18 +97,6 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame) -> pd.DataFrame:
 	iosTotal = len(dfIos)
 	androidTotal = len(dfAndroid)
 	webTotal = len(dfWeb)
-
-	# safe calculation function to handle potential NaN or empty series
-	# in case of failure it returns nan
-	def safeCalculation(series, func, decimals=2):
-		try:
-			result = func(series)
-			if hasattr(result, 'round'):
-				return result.round(decimals)
-			else:
-				return round(result, decimals)
-		except:
-			return float('nan')
 
 	# calculate percentages
 	singleDayIosValue = safeCalculation((differenceIos == 0).sum() / iosTotal * 100 if iosTotal > 0 else 0, lambda x: x)
@@ -112,6 +137,11 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame) -> pd.DataFrame:
 		}
 	}
 
+	if country == None:
+		pass
+	else:
+		print(country)
+	
 	statsDf = pd.DataFrame(stats)
 	
 	return statsDf
@@ -170,7 +200,7 @@ def	tableDiffFirstAndLast(stats: dict) -> None:
 	plt.show()
 	return
 
-def activityPeriodCorrelation(df: pd.DataFrame) -> pd.DataFrame:
+def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFrame:
 	"""
     Correlation Between Activity Period and Purchase Count
     
@@ -178,23 +208,44 @@ def activityPeriodCorrelation(df: pd.DataFrame) -> pd.DataFrame:
 	df
 		pd.DataFrame parsed dataframe
 	
+	:Parameters:
+	country
+		string that should contain desired country to visualize. Available countries
+		are FIN, DNK, and GRC. Leave blank to view all.
+	
 	:Returns:
 	statsDf
 		pd.DataFrame dataframe containing mean active days,
 		mean purchase, and correlation values by platform.
 	"""
+	# find if string `country` is in the list of valid countries
+	if country in listOfCountries:
+		dfCountry = (df[df['REGISTRATION_COUNTRY'] == country]).copy()
+	elif country == None:
+		dfCountry = df.copy()
+	else:
+		print("Error: no such country")
+		return None
+
+	if country == "DNK":
+		country = "Denmark"
+	elif country == "FIN":
+		country = "Finland"
+	else:
+		country = "Greece"
+
 	# get difference from first to last day
-	firstPurchase = pd.to_datetime(df['FIRST_PURCHASE_DAY'].str[:10])
-	lastPurchase = pd.to_datetime(df['LAST_PURCHASE_DAY'].str[:10])
+	firstPurchase = pd.to_datetime(dfCountry['FIRST_PURCHASE_DAY'].str[:10])
+	lastPurchase = pd.to_datetime(dfCountry['LAST_PURCHASE_DAY'].str[:10])
 	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days
 
 	# add active days to the dataframe (individual values, not the mean)
-	df['ACTIVE_DAYS'] = daysBetweenPurchases
+	dfCountry['ACTIVE_DAYS'] = daysBetweenPurchases
 
 	# separate by OS using boolean mask
-	dfIos = df[df['PREFERRED_DEVICE'] == "ios"]
-	dfAndroid = df[df['PREFERRED_DEVICE'] == "android"]
-	dfWeb = df[df['PREFERRED_DEVICE'] == "web"]
+	dfIos = dfCountry[dfCountry['PREFERRED_DEVICE'] == "ios"]
+	dfAndroid = dfCountry[dfCountry['PREFERRED_DEVICE'] == "android"]
+	dfWeb = dfCountry[dfCountry['PREFERRED_DEVICE'] == "web"]
 
 	# calculate mean active days for each platform separately
 	meanActivityPeriodWeb = dfWeb['ACTIVE_DAYS'].mean()
@@ -229,6 +280,11 @@ def activityPeriodCorrelation(df: pd.DataFrame) -> pd.DataFrame:
 		}
 	}
 
+	if country == None:
+		pass
+	else:
+		print(country)
+
 	# convert to DataFrame for better display
 	statsDf = pd.DataFrame(stats).T	
 
@@ -236,10 +292,20 @@ def activityPeriodCorrelation(df: pd.DataFrame) -> pd.DataFrame:
 
 def firstAndLast(df: pd.DataFrame) -> None:
 	"""
-	placeholder
+	Staging to retrieve data from first to last day of purchase. 
+	The objective is to show that there is correlation between higher
+	number of overall purchases and higher active days.
+
+	This function is unnecessary inside the notebook.
+
+	:Parameters:
+	df
+		pd.DataFrame parsed previously
+
+	:Returns:
+	None
 	"""
 	dfCopy = df.copy()
-	stats1 = diffBetweenFirstAndLastPurchase(dfCopy)
-	tableDiffFirstAndLast(stats1)
+	diffBetweenFirstAndLastPurchase(dfCopy)
+	# tableDiffFirstAndLast(dfCopy)
 	activityPeriodCorrelation(dfCopy)
-	return

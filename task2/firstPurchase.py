@@ -51,19 +51,16 @@ def createBuckets(df: pd.DataFrame) -> pd.DataFrame:
 
 	# Group by days to first purchase and count devices
 	result = dfCopy.groupby('PURCHASE_TIME_BUCKET', observed=True).agg(
-	    web=('PREFERRED_DEVICE', lambda x: (x == "web").sum()),
-	    ios=('PREFERRED_DEVICE', lambda x: (x == "ios").sum()),
-	    android=('PREFERRED_DEVICE', lambda x: (x == "android").sum())
+		web=('PREFERRED_DEVICE', lambda x: (x == "web").sum()),
+		ios=('PREFERRED_DEVICE', lambda x: (x == "ios").sum()),
+		android=('PREFERRED_DEVICE', lambda x: (x == "android").sum())
 	)
 
 	# percentage columns
 	columnTotals = result.sum()
-	percentageResult = result.div(columnTotals).multiply(100).round(2)
-    
-	return percentageResult
+	percentageResult = pd.DataFrame(result.div(columnTotals).multiply(100).round(2))
 
-def deviceStats(df: pd.DataFrame):
-	return
+	return percentageResult
 
 def visualizeFirstPurchase(df: pd.DataFrame, country: str) -> None:
 	"""
@@ -133,8 +130,8 @@ def firstPurchase(df: pd.DataFrame, country: str):
 
 	# create buckets with `DAYS_TO_FIRST_PURCHASE` (e.g. - same day, 1-7 days, etc). This dataframe does NOT
 	# contain most of the original dataframe columns.
-	dfWithBuckets = createBuckets(filteredDf)
+	createBuckets(filteredDf)
 	
 	# Visualization of data on table by country (options: FIN, DNK, GRC, ALL)
-	visualizeFirstPurchase(dfWithBuckets, country)
+	# visualizeFirstPurchase(dfWithBuckets, country)
 		
