@@ -42,11 +42,13 @@ python3 dbCreation.py
 
 This line creates the database named `wolt_mock.db` using the tables from `tables.sql` inside `task1/sql/schema/`. Afterwards you can test the queries using the following commands (considering that you are in the same directory as the db)
 
-Be sure to have SQLite3 installed on your device. Run this line for linux ubuntu:
+Be sure to have SQLite3 installed on your device. If you are using Linux Ubuntu, you can use the following line:
 
 ```bash
 sudo apt install sqlite3
 ```
+
+After that, execute the following lines in CLI:
 
 ```bash
 sqlite3 wolt_mock.db < ../sql/queries/query1.sql
@@ -59,12 +61,20 @@ sqlite3 wolt_mock.db < ../sql/queries/query3b.sql
 
 ### Required packages
 
-For this script to work, you need to install pandas and numpy
+Before going further, you may want to create a python virtual environment to run this project:
 
 ```bash
-sudo apt install python3-pandas
-sudo apt install python3-numpy
-sudo apt install python3-matplotlib
+python3 -m venv <your-virtual-environment>
 ```
 
+After creating the virtual environment, you may run it by using the following line:
 
+```bash
+source <your-virtual-environment>/bin/activate
+```
+
+If you managed to start the virtual environment, install the required packages in `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
