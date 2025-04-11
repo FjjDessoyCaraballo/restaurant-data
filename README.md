@@ -95,6 +95,10 @@ jupyter notebook
 
 As you run this line, your web browser should open up a tab and you will be able to see the directories of this project. Navigate into `task2` directory and open the notebook named `notebook.ipynb`. After this, you should be able to see the rendered notebook and view the extracted and wrangled data.
 
+The codeblocks inside the notebook can be interacted with, which means that you can change the code inside it for a number of reasons - e.g. change the parameters of functions to choose specific countries.
+
+After running changes, you have to press the "run" button to apply the changes from any code blocks into the notebook.
+
 ### About the data
 
 All data comes the csv file called `dataset_for_datascience_assignment.csv` which was provided by Wolt. The dataset here has no relation with task one.
