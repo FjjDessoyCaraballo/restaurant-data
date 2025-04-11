@@ -286,7 +286,7 @@ def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFra
 		print(country)
 
 	# convert to DataFrame for better display
-	statsDf = pd.DataFrame(stats).T	
+	statsDf = pd.DataFrame(stats).T
 
 	return statsDf
 

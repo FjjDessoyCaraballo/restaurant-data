@@ -59,7 +59,7 @@ sqlite3 wolt_mock.db < ../sql/queries/query3b.sql
 
 ## TASK 2
 
-### Required packages
+### HOWTO
 
 Before going further, you may want to create a python virtual environment to run this project:
 
@@ -73,8 +73,32 @@ After creating the virtual environment, you may run it by using the following li
 source <your-virtual-environment>/bin/activate
 ```
 
+To deactivate the virtual environment later, just run this line:
+
+```bash
+deactivate
+```
+
 If you managed to start the virtual environment, install the required packages in `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
 ```
+
+After running the requirements our virtual environment should contain `pandas`, `matplotlib`, `numpy`, and `jupyter notebook`. The notebook is the most important part for the next parts.
+
+Now run the following line to open up the notebook:
+
+```bash
+jupyter notebook
+```
+
+As you run this line, your web browser should open up a tab and you will be able to see the directories of this project. Navigate into `task2` directory and open the notebook named `notebook.ipynb`. After this, you should be able to see the rendered notebook and view the extracted and wrangled data.
+
+### About the data
+
+All data comes the csv file called `dataset_for_datascience_assignment.csv` which was provided by Wolt. The dataset here has no relation with task one.
+
+### About the structure of the project
+
+The python files contained in (deciding folder structure still) contain a main() in `task2.py` which is purely made for testing. Extra visualizations were made for tables that are already displayed in the notebook, and the function are available commented inside the blocks of code in the notebook.
