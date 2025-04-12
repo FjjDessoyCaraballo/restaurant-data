@@ -60,6 +60,7 @@ sqlite3 wolt_mock.db < ../sql/queries/query3b.sql
 ```
 
 ___
+
 ### Task two
 
 Before going further, you may want to create a python virtual environment to run this project:

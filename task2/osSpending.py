@@ -73,6 +73,8 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 		}
 	}
 
+	print(minOrMax)
+
 	# convert stats into pandas dataframe format
 	statsDataframe = pd.DataFrame(stats)
 
@@ -117,7 +119,7 @@ def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	plt.show()
 	return
 
-def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None) -> None:
+def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None, country: str=None) -> None:
 	"""
 	Function to make a scatterplot to visualize trend between total purchases
 	and days to first purchase.
@@ -133,8 +135,11 @@ def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None) -> None:
 	filteredDf = df.copy()
 
 	# Select OS
-	if os is not None:
-		filteredDf = filteredDf[filteredDf["PREFERRED_DEVICE"] == f"{os}"]	
+	if os:
+		filteredDf = filteredDf[filteredDf["PREFERRED_DEVICE"] == os]
+	
+	if country:
+		filteredDf = filteredDf[filteredDf["REGISTRATION_COUNTRY"] == country]
 	
 	# add the DAYS_TO_FIRST_PURCHASE column
 	filteredDf = filterFirstPurchase(filteredDf)
@@ -189,8 +194,12 @@ def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None) -> None:
 	# enhancing readability
 	plt.xlabel('Days to First Purchase', fontsize=12)
 	plt.ylabel('Total Purchases (€)', fontsize=12)
-	if os is not None:
-		plt.title(f'{os}: Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
+
+	if country == None:
+		country = "All Countries"
+
+	if os:
+		plt.title(f'{os} in {country}: Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
 	else:
 		plt.title('Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)		
 	plt.grid(True, alpha=0.3, linestyle='--')
