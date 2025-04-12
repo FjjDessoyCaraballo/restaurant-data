@@ -1,8 +1,9 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from parsing import parseDf
 
-listOfPlatforms = ["ios", "android", "web"]
+validDevices = ["ios", "android", "web"]
 listOfCountries = ["FIN", "DNK", "GRC"]
 
 # safe calculation function to handle potential NaN or empty series
@@ -27,7 +28,7 @@ def totalUsers(argument: str) -> int:
 		number of total users of OS or country. In case of failure it returns -1
 	"""
 	# Determine if argument is a country or platform
-	if argument in listOfPlatforms:
+	if argument in validDevices:
 		df = parseDf()
 		users = df[df['PREFERRED_DEVICE'] == argument].shape[0]
 		return users
@@ -72,7 +73,7 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 		country = "Denmark"
 	elif country == "FIN":
 		country = "Finland"
-	else:
+	elif country == "GRC":
 		country = "Greece"
 
 	# get difference from first to last day
@@ -231,7 +232,7 @@ def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFra
 		country = "Denmark"
 	elif country == "FIN":
 		country = "Finland"
-	else:
+	elif country == "GRC":
 		country = "Greece"
 
 	# get difference from first to last day
@@ -290,6 +291,119 @@ def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFra
 
 	return statsDf
 
+def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=None, os: str=None) -> None:
+	"""
+	Create a scatter plot to visualize the relationship between activity period and referred `column`. User 
+	may also input country and platform of choice. However, column is a necessary parameter.
+
+	:Parameters:
+	df : pd.DataFrame
+		DataFrame containing parsed data
+
+	:Parameters:
+	column
+		str that informs which columnn will be the y axis to compare against `ACTIVE_DAYS`. Suggested values are
+		`TOTAL_PURCHASES_EUR` and `PURCHASE_COUNT`. However, the function accepts any of the other columns for
+		data exploration.
+	
+	:Parameters:
+	country
+		str that should contain a country ISO within the list of valid countries: FIN, DNK, GRC. If left blank
+
+	:Parameters:
+	os
+		str that should contain a chosen platform within the list of chosen devices: ios, android, and web
+	
+	:Returns:
+	None
+	"""
+	# if no column is informed we return
+	if column == None:
+		return
+
+	# if no country is informed, we default to all
+	if country == None:
+		country == "ALL"
+
+	# get difference from first to last day
+	firstPurchase = pd.to_datetime(df['FIRST_PURCHASE_DAY'].str[:10])
+	lastPurchase = pd.to_datetime(df['LAST_PURCHASE_DAY'].str[:10])
+	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days
+
+	# add active days to the dataframe (individual values, not the mean)
+	df['ACTIVE_DAYS'] = daysBetweenPurchases
+
+	if os in validDevices:
+		df = df[df['PREFERRED_DEVICE'] == os]
+	if country in listOfCountries:
+		df = df[df['REGISTRATION_COUNTRY'] == country]
+
+	# copy original dataframe
+	activityDf = df.copy()
+
+	# remove same day purchases
+	activityDf = activityDf[activityDf['ACTIVE_DAYS'] > 0]
+
+	# remove NaN, inf values and extreme outliers
+	activityDf = activityDf.replace([np.inf, -np.inf], np.nan)
+	activityDf = activityDf.dropna(subset=['ACTIVE_DAYS', column])
+
+	# scatterplot creation
+	plt.figure(figsize=(12, 8))
+
+	# creating scatterplot with different density for aesthetic reasons
+	plt.scatter(
+		activityDf['ACTIVE_DAYS'], 
+		activityDf[column], 
+		alpha=0.5,
+		s=30,
+		color='#3498db'
+	)
+
+	# linear regression
+	z = np.polyfit(activityDf['ACTIVE_DAYS'], activityDf[column], 1)
+	p = np.poly1d(z)
+	xLine = np.linspace(activityDf['ACTIVE_DAYS'].min(), activityDf['ACTIVE_DAYS'].max(), 100)
+	plt.plot(xLine, p(xLine), "r--", linewidth=2, alpha=0.8)
+
+	# correlation coefficient
+	corr = activityDf['ACTIVE_DAYS'].corr(activityDf[column])
+	plt.annotate(
+		f'Correlation: {corr:.2f}', 
+		xy=(0.05, 0.95), 
+		xycoords='axes fraction',
+		fontsize=12,
+		bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
+	)
+
+	# enhancing readability
+	plt.xlabel('Active Days', fontsize=12)
+	plt.ylabel('Total Purchases (€)', fontsize=12)
+	if os:
+		plt.title(f'{os} in {country}: Relationship Between Active days and {column}')
+	else:
+		plt.title(f'{country}: Relationship Between Active days and {column}')
+	plt.grid(True, alpha=0.3, linestyle='--')
+
+	# text box
+	if column == "TOTAL_PURCHASE_EUR":
+		statsText = (
+			f"Data points: {len(activityDf)}\n"
+			f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+			f"Mean purchases: {activityDf[column].mean():.1f}€"
+		)
+	else:
+		statsText = (
+			f"Data points: {len(activityDf)}\n"
+			f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+			f"Mean purchases count: {activityDf[column].mean():.1f}"
+		)
+	plt.figtext(0.15, 0.02, statsText, fontsize=10,
+			 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
+
+	plt.tight_layout()
+	plt.show()
+
 def firstAndLast(df: pd.DataFrame) -> None:
 	"""
 	Staging to retrieve data from first to last day of purchase. 
@@ -306,6 +420,7 @@ def firstAndLast(df: pd.DataFrame) -> None:
 	None
 	"""
 	dfCopy = df.copy()
-	diffBetweenFirstAndLastPurchase(dfCopy)
+	# diffBetweenFirstAndLastPurchase(dfCopy)
 	# tableDiffFirstAndLast(dfCopy)
-	activityPeriodCorrelation(dfCopy)
+	# activityPeriodCorrelation(dfCopy)
+	scatterPlotActivityPeriod(dfCopy)
