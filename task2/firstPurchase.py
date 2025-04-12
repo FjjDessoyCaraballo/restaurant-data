@@ -63,6 +63,9 @@ def createBuckets(df: pd.DataFrame) -> pd.DataFrame:
 	columnTotals = result.sum()
 	percentageResult = pd.DataFrame(result.div(columnTotals).multiply(100).round(2))
 
+	for column in percentageResult.columns:
+		percentageResult[column] = percentageResult[column].astype(str) + "%"
+
 	return percentageResult
 
 def visualizeFirstPurchase(df: pd.DataFrame, country: str) -> None:

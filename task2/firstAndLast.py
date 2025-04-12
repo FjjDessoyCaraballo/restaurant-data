@@ -147,7 +147,7 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 	
 	return statsDf
 
-def	tableDiffFirstAndLast(stats: dict) -> None:
+def	tableDiffFirstAndLast(stats: pd.DataFrame) -> None:
 	"""
 	Function that displays table with: total users, mean active period,
 	median active period, single day users, and maximum active period.
@@ -159,8 +159,7 @@ def	tableDiffFirstAndLast(stats: dict) -> None:
 	:Returns:
 	None
 	"""
-	# turn dictionary into dataframe
-	dataframe = pd.DataFrame(stats)
+	dataframe = stats.copy()
 
 	# matrix for display
 	formattedValues = []
