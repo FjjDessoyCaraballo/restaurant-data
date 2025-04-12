@@ -67,11 +67,11 @@ def countryCount():
 	# plot
 	plt.figure(figsize=(12,6))
 	countryPercentages.plot(kind='bar', width=0.4, color=plt.cm.viridis(np.linspace(0, 1, len(countryPercentages))))
-	plt.title('Percentage of Users by Country', fontsize=20, pad=15)
-	plt.xlabel('Country', fontsize=17)
-	plt.ylabel('Percentage of Users (%)', fontsize=17)
-	plt.xticks(rotation=20, size=15)
-	plt.yticks(size=15)
+	plt.title('Percentage of Users by Country', fontsize=17, pad=15)
+	plt.xlabel('Country', fontsize=15)
+	plt.ylabel('Percentage of Users (%)', fontsize=15)
+	plt.xticks(rotation=20, size=12)
+	plt.yticks(size=12)
 
 	# Add percentage labels on top of each bar
 	for i, v in enumerate(countryPercentages):

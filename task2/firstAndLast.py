@@ -113,10 +113,16 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 	maxIos = safeCalculation(differenceIos, lambda x: x.max())
 	maxAndroid = safeCalculation(differenceAndroid, lambda x: x.max())
 	maxWeb = safeCalculation(differenceWeb, lambda x: x.max())
+
+	# average days between purchases
+	avgBetweenDaysWeb = dfWeb['AVG_DAYS_BETWEEN_PURCHASES']
+	avgBetweenDaysIos = dfIos['AVG_DAYS_BETWEEN_PURCHASES']
+	avgBetweenDaysAndroid = dfAndroid['AVG_DAYS_BETWEEN_PURCHASES']
 	
 	stats = {
 		'web': {
 			'Total Users': totalUsers("web"),
+			'Average Days Between Purchases': safeCalculation(avgBetweenDaysWeb, lambda x: x.mean()),
 			'Mean Active Period': safeCalculation(differenceWeb, lambda x: x.mean()),
 			'Median Active Period': safeCalculation(differenceWeb, lambda x: x.median()),
 			'Single Day Users': singleDayWeb,
@@ -124,6 +130,7 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 		},
 		'ios': {
 			'Total Users': totalUsers("ios"),
+			'Average Days Between Purchases': safeCalculation(avgBetweenDaysIos, lambda x: x.mean()),
 			'Mean Active Period': safeCalculation(differenceIos, lambda x: x.mean()),
 			'Median Active Period': safeCalculation(differenceIos, lambda x: x.median()),
 			'Single Day Users': singleDayIos,
@@ -131,6 +138,7 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 		},
 		'android': {
 			'Total Users': totalUsers("android"),
+			'Average Days Between Purchases': safeCalculation(avgBetweenDaysAndroid, lambda x: x.mean()),
 			'Mean Active Period': safeCalculation(differenceAndroid, lambda x: x.mean()),
 			'Median Active Period': safeCalculation(differenceAndroid, lambda x: x.median()),
 			'Single Day Users': singleDayAndroid,
@@ -329,7 +337,7 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	firstPurchase = pd.to_datetime(filteredDf['FIRST_PURCHASE_DAY'].str[:10])
 	lastPurchase = pd.to_datetime(filteredDf['LAST_PURCHASE_DAY'].str[:10])
 	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days	
-	
+
 	# add active days to the dataframe (individual values, not the mean)
 	filteredDf['ACTIVE_DAYS'] = daysBetweenPurchases	
 	
