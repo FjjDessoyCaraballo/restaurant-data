@@ -30,7 +30,9 @@ For this assignment we were given two tasks. The first tasks is to create tables
     └── task2.py
 ```
 
-## TASK 1
+## HOWTO
+
+### TASK 1
 
 For the first task you will find that we have no mock data to test our queries and tables. Therefore I devised a script to create some mock database to test them. The directory tree shows us that `task1` has two other directories: `sql` and `db`. The `dbCreation.py` script is contained within the `db` directory. For this task I designed my queries to comply with SQLite3, since it is friendlier towards a small project, such as this one.
 
@@ -57,9 +59,7 @@ sqlite3 wolt_mock.db < ../sql/queries/query3a.sql
 sqlite3 wolt_mock.db < ../sql/queries/query3b.sql
 ```
 
-## TASK 2
-
-### HOWTO
+### TASK 2
 
 Before going further, you may want to create a python virtual environment to run this project:
 
