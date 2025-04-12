@@ -6,6 +6,9 @@ bins = [0, 1, 7, 14, 30, 60, 90, 180, 365, float('inf')]
 labels = ['Same day', '1-7 days', '8-14 days', '15-30 days', '31-60 days',
 	   '61-90 days', '91-180 days', '181-365 days', '365+ days']
 
+# valid countries
+listOfCountries = ["FIN", "DNK", "GRC"]
+
 def filterFirstPurchase(df: pd.DataFrame) -> pd.DataFrame:
 	"""
 	Function to find the difference between registration date and 
@@ -103,7 +106,7 @@ def visualizeFirstPurchase(df: pd.DataFrame, country: str) -> None:
 	# output visualization
 	plt.show()
 
-def firstPurchase(df: pd.DataFrame, country: str):
+def firstPurchase(df: pd.DataFrame, country: str=None):
 	"""
 	Staging area to filter and plot our dataframe. Here we want to
 	understand if there is some pattern to the day of the registry
@@ -123,15 +126,18 @@ def firstPurchase(df: pd.DataFrame, country: str):
 	newDfAddedColumn: pd.DataFrame = filterFirstPurchase(df)
 
 	# filter by selected country. This dataframe will still contain most of the original columns
-	if country != "ALL":
+	if country in listOfCountries:
 		filteredDf = newDfAddedColumn[newDfAddedColumn['REGISTRATION_COUNTRY'] == country]
 	else:
 		filteredDf = newDfAddedColumn.copy()
 
 	# create buckets with `DAYS_TO_FIRST_PURCHASE` (e.g. - same day, 1-7 days, etc). This dataframe does NOT
 	# contain most of the original dataframe columns.
-	createBuckets(filteredDf)
-	
-	# Visualization of data on table by country (options: FIN, DNK, GRC, ALL)
-	# visualizeFirstPurchase(dfWithBuckets, country)
+	dfWithBuckets = createBuckets(filteredDf)
+
+	if country == None:
+		country = "All"
+
+	# Visualization of data on table by country (options: FIN, DNK, GRC, All)
+	visualizeFirstPurchase(dfWithBuckets, country)
 		
