@@ -195,11 +195,25 @@ def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None, country: str=None)
 	plt.xlabel('Days to First Purchase', fontsize=12)
 	plt.ylabel('Total Purchases (€)', fontsize=12)
 
+
+	
+	# change country ISO to proper name
+	if country:
+		if country == "DNK":
+			country = "Denmark"
+		elif country == "FIN":
+			country = "Finland"
+		elif country == "GRC":
+				country = "Greece"
+
 	if country == None:
-		country = "All Countries"
+		country = "all Countries"
 
 	if os:
-		plt.title(f'{os} in {country}: Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
+		if country:
+			plt.title(f'{os} in {country}: Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
+		else:
+			plt.title(f'{os}: Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)
 	else:
 		plt.title('Relationship Between Days Until First Purchase and Total Amount (€)', fontsize=14)		
 	plt.grid(True, alpha=0.3, linestyle='--')

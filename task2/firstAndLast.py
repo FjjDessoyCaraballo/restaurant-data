@@ -137,11 +137,6 @@ def diffBetweenFirstAndLastPurchase(df: pd.DataFrame, country: str=None) -> pd.D
 			'Maximum Active Period': maxAndroid
 		}
 	}
-
-	if country == None:
-		pass
-	else:
-		print(country)
 	
 	statsDf = pd.DataFrame(stats)
 	
@@ -320,10 +315,10 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	# if no column is informed we return
 	if column is None:
 		return	
-	# Create a copy of the dataframe to work with
+	# create a copy of the dataframe to work with
 	filteredDf = df.copy()
 
-	# Apply filters if specified
+	# apply filters if specified
 	if os in validDevices:
 		filteredDf = filteredDf[filteredDf['PREFERRED_DEVICE'] == os]
 
@@ -360,7 +355,7 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	    color='#3498db'
 	)	
 	
-	# Only perform linear regression if there are data points
+	# only perform linear regression if there are data points
 	if len(activityDf) > 1:
 		# linear regression
 		z = np.polyfit(activityDf['ACTIVE_DAYS'], activityDf[column], 1)
@@ -377,9 +372,17 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	    	bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
 		)	
 	
-	# Set title based on filters
+
+	# set title based on filters
 	title = ""
 	if country in listOfCountries:
+		# Change from ISO to proper country name
+		if country == "DNK":
+			country = "Denmark"
+		elif country == "FIN":
+			country = "Finland"
+		elif country == "GRC":
+			country = "Greece"
 		title += f"{country}: "
 	else:
 		title += "All Countries: "
