@@ -180,7 +180,7 @@ def	tableDiffFirstAndLast(stats: pd.DataFrame) -> None:
 				row.append(str(value))
 		formattedValues.append(row)
 
-	fig, ax = plt.subplots(figsize=(6,2.8))
+	fig, ax = plt.subplots(figsize=(6,3.3))
 
 	ax.axis('tight')
 	ax.axis('off')
