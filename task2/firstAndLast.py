@@ -293,113 +293,124 @@ def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFra
 def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=None, os: str=None) -> None:
 	"""
 	Create a scatter plot to visualize the relationship between activity period and referred `column`. User 
-	may also input country and platform of choice. However, column is a necessary parameter.
-
+	may also input country and platform of choice. However, column is a necessary parameter.	
 	:Parameters:
 	df : pd.DataFrame
-		DataFrame containing parsed data
-
+		DataFrame containing parsed data	
+	
 	:Parameters:
 	column
-		str that informs which columnn will be the y axis to compare against `ACTIVE_DAYS`. Suggested values are
-		`TOTAL_PURCHASES_EUR` and `PURCHASE_COUNT`. However, the function accepts any of the other columns for
-		data exploration.
+	    str that informs which columnn will be the y axis to compare against `ACTIVE_DAYS`. Suggested values are
+	    `TOTAL_PURCHASES_EUR` and `PURCHASE_COUNT`. However, the function accepts any other columns for
+	    data exploration.
+
 	
 	:Parameters:
 	country
 		str that should contain a country ISO within the list of valid countries: FIN, DNK, GRC. If left blank
-
+		will use all countries.	
+	
 	:Parameters:
 	os
 		str that should contain a chosen platform within the list of chosen devices: ios, android, and web
-	
+
 	:Returns:
 	None
 	"""
 	# if no column is informed we return
-	if column == None:
-		return
+	if column is None:
+		return	
+	# Create a copy of the dataframe to work with
+	filteredDf = df.copy()
 
-	# if no country is informed, we default to all
-	if country == None:
-		country == "ALL"
+	# Apply filters if specified
+	if os in validDevices:
+		filteredDf = filteredDf[filteredDf['PREFERRED_DEVICE'] == os]
+
+	if country in listOfCountries:
+		filteredDf = filteredDf[filteredDf['REGISTRATION_COUNTRY'] == country]
 
 	# get difference from first to last day
-	firstPurchase = pd.to_datetime(df['FIRST_PURCHASE_DAY'].str[:10])
-	lastPurchase = pd.to_datetime(df['LAST_PURCHASE_DAY'].str[:10])
-	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days
-
+	firstPurchase = pd.to_datetime(filteredDf['FIRST_PURCHASE_DAY'].str[:10])
+	lastPurchase = pd.to_datetime(filteredDf['LAST_PURCHASE_DAY'].str[:10])
+	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days	
+	
 	# add active days to the dataframe (individual values, not the mean)
-	df['ACTIVE_DAYS'] = daysBetweenPurchases
-
-	if os in validDevices:
-		df = df[df['PREFERRED_DEVICE'] == os]
-	if country in listOfCountries:
-		df = df[df['REGISTRATION_COUNTRY'] == country]
-
+	filteredDf['ACTIVE_DAYS'] = daysBetweenPurchases	
+	
 	# copy original dataframe
-	activityDf = df.copy()
-
+	activityDf = filteredDf.copy()	
+	
 	# remove same day purchases
-	activityDf = activityDf[activityDf['ACTIVE_DAYS'] > 0]
-
+	activityDf = activityDf[activityDf['ACTIVE_DAYS'] > 0]	
+	
 	# remove NaN, inf values and extreme outliers
 	activityDf = activityDf.replace([np.inf, -np.inf], np.nan)
-	activityDf = activityDf.dropna(subset=['ACTIVE_DAYS', column])
-
+	activityDf = activityDf.dropna(subset=['ACTIVE_DAYS', column])	
+	
 	# scatterplot creation
-	plt.figure(figsize=(12, 8))
-
+	plt.figure(figsize=(12, 8))	
+	
 	# creating scatterplot with different density for aesthetic reasons
 	plt.scatter(
-		activityDf['ACTIVE_DAYS'], 
-		activityDf[column], 
-		alpha=0.5,
-		s=30,
-		color='#3498db'
-	)
-
-	# linear regression
-	z = np.polyfit(activityDf['ACTIVE_DAYS'], activityDf[column], 1)
-	p = np.poly1d(z)
-	xLine = np.linspace(activityDf['ACTIVE_DAYS'].min(), activityDf['ACTIVE_DAYS'].max(), 100)
-	plt.plot(xLine, p(xLine), "r--", linewidth=2, alpha=0.8)
-
-	# correlation coefficient
-	corr = activityDf['ACTIVE_DAYS'].corr(activityDf[column])
-	plt.annotate(
-		f'Correlation: {corr:.2f}', 
-		xy=(0.05, 0.95), 
-		xycoords='axes fraction',
-		fontsize=12,
-		bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
-	)
+	    activityDf['ACTIVE_DAYS'], 
+	    activityDf[column], 
+	    alpha=0.5,
+	    s=30,
+	    color='#3498db'
+	)	
+	
+	# Only perform linear regression if there are data points
+	if len(activityDf) > 1:
+		# linear regression
+		z = np.polyfit(activityDf['ACTIVE_DAYS'], activityDf[column], 1)
+		p = np.poly1d(z)
+		xLine = np.linspace(activityDf['ACTIVE_DAYS'].min(), activityDf['ACTIVE_DAYS'].max(), 100)
+		plt.plot(xLine, p(xLine), "r--", linewidth=2, alpha=0.8)	
+		# correlation coefficient
+		corr = activityDf['ACTIVE_DAYS'].corr(activityDf[column])
+		plt.annotate(
+	    	f'Correlation: {corr:.2f}', 
+	    	xy=(0.05, 0.95), 
+	    	xycoords='axes fraction',
+	    	fontsize=12,
+	    	bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
+		)	
+	
+	# Set title based on filters
+	title = ""
+	if country in listOfCountries:
+		title += f"{country}: "
+	else:
+		title += "All Countries: "
+	
+	if os in validDevices:
+		title += f"({os}) "
+	
+	title += f"Relationship Between Active Days and {column}"
 
 	# enhancing readability
 	plt.xlabel('Active Days', fontsize=12)
-	plt.ylabel('Total Purchases (€)', fontsize=12)
-	if os:
-		plt.title(f'{os} in {country}: Relationship Between Active days and {column}')
-	else:
-		plt.title(f'{country}: Relationship Between Active days and {column}')
-	plt.grid(True, alpha=0.3, linestyle='--')
-
+	plt.ylabel(column.replace('_', ' ').title(), fontsize=12)
+	plt.title(title)
+	plt.grid(True, alpha=0.3, linestyle='--')	
+	
 	# text box
 	if column == "TOTAL_PURCHASE_EUR":
 		statsText = (
-			f"Data points: {len(activityDf)}\n"
-			f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
-			f"Mean purchases: {activityDf[column].mean():.1f}€"
+	    	f"Data points: {len(activityDf)}\n"
+	    	f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+	    	f"Mean purchases: {activityDf[column].mean():.1f}€"
 		)
 	else:
 		statsText = (
 			f"Data points: {len(activityDf)}\n"
 			f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
-			f"Mean purchases count: {activityDf[column].mean():.1f}"
+			f"Mean {column.replace('_', ' ').lower()}: {activityDf[column].mean():.1f}"
 		)
-	plt.figtext(0.15, 0.02, statsText, fontsize=10,
-			 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
-
+	
+	plt.figtext(0.15, 0.02, statsText, fontsize=10, 
+			 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))	
 	plt.tight_layout()
 	plt.show()
 
