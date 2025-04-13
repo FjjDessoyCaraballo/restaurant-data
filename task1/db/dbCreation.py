@@ -2,9 +2,18 @@ import sqlite3
 import random
 from datetime import datetime, timedelta
 import uuid
+import os
+
+# Database filename
+db_file = 'wolt_mock.db'
+
+# Remove the existing database file if it exists
+if os.path.exists(db_file):
+    os.remove(db_file)
+    print(f"Existing database '{db_file}' removed.")
 
 # Create a connection to the database
-conn = sqlite3.connect('wolt_mock.db')
+conn = sqlite3.connect(db_file)
 cursor = conn.cursor()
 
 with open('../sql/schema/tables.sql', 'r') as sql_file:

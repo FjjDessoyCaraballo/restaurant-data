@@ -50,6 +50,12 @@ Be sure to have SQLite3 installed on your device. If you are using Linux Ubuntu,
 sudo apt install sqlite3
 ```
 
+If you are using mac, you may use homebrew:
+
+```bash
+brew install sqlite3 
+```
+
 After that, execute the following lines in CLI:
 
 ```bash
