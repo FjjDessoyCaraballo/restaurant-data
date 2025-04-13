@@ -333,30 +333,22 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	if country in listOfCountries:
 		filteredDf = filteredDf[filteredDf['REGISTRATION_COUNTRY'] == country]
 
-	# get difference from first to last day
-	firstPurchase = pd.to_datetime(filteredDf['FIRST_PURCHASE_DAY'].str[:10])
-	lastPurchase = pd.to_datetime(filteredDf['LAST_PURCHASE_DAY'].str[:10])
-	daysBetweenPurchases = (lastPurchase - firstPurchase).dt.days	
-
-	# add active days to the dataframe (individual values, not the mean)
-	filteredDf['ACTIVE_DAYS'] = daysBetweenPurchases	
-	
 	# copy original dataframe
 	activityDf = filteredDf.copy()	
 	
 	# remove same day purchases
-	activityDf = activityDf[activityDf['ACTIVE_DAYS'] > 0]	
+	activityDf = activityDf[activityDf['AVG_DAYS_BETWEEN_PURCHASES'] > 0]	
 	
 	# remove NaN, inf values and extreme outliers
 	activityDf = activityDf.replace([np.inf, -np.inf], np.nan)
-	activityDf = activityDf.dropna(subset=['ACTIVE_DAYS', column])	
+	activityDf = activityDf.dropna(subset=['AVG_DAYS_BETWEEN_PURCHASES', column])	
 	
 	# scatterplot creation
 	plt.figure(figsize=(12, 8))	
 	
 	# creating scatterplot with different density for aesthetic reasons
 	plt.scatter(
-	    activityDf['ACTIVE_DAYS'], 
+	    activityDf['AVG_DAYS_BETWEEN_PURCHASES'], 
 	    activityDf[column], 
 	    alpha=0.5,
 	    s=30,
@@ -366,12 +358,12 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	# only perform linear regression if there are data points
 	if len(activityDf) > 1:
 		# linear regression
-		z = np.polyfit(activityDf['ACTIVE_DAYS'], activityDf[column], 1)
+		z = np.polyfit(activityDf['AVG_DAYS_BETWEEN_PURCHASES'], activityDf[column], 1)
 		p = np.poly1d(z)
-		xLine = np.linspace(activityDf['ACTIVE_DAYS'].min(), activityDf['ACTIVE_DAYS'].max(), 100)
+		xLine = np.linspace(activityDf['AVG_DAYS_BETWEEN_PURCHASES'].min(), activityDf['AVG_DAYS_BETWEEN_PURCHASES'].max(), 100)
 		plt.plot(xLine, p(xLine), "r--", linewidth=2, alpha=0.8)	
 		# correlation coefficient
-		corr = activityDf['ACTIVE_DAYS'].corr(activityDf[column])
+		corr = activityDf['AVG_DAYS_BETWEEN_PURCHASES'].corr(activityDf[column])
 		plt.annotate(
 	    	f'Correlation: {corr:.2f}', 
 	    	xy=(0.05, 0.95), 
@@ -380,7 +372,6 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	    	bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8)
 		)	
 	
-
 	# set title based on filters
 	title = ""
 	if country in listOfCountries:
@@ -398,7 +389,7 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	if os in validDevices:
 		title += f"({os}) "
 	
-	title += f"Relationship Between Active Days and {column}"
+	title += f"Relationship Between Average Activity (days) and {column}"
 
 	# enhancing readability
 	plt.xlabel('Active Days', fontsize=12)
@@ -409,14 +400,14 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	# text box
 	if column == "TOTAL_PURCHASE_EUR":
 		statsText = (
-	    	f"Data points: {len(activityDf)}\n"
-	    	f"Mean Active Days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
-	    	f"Mean purchases: {activityDf[column].mean():.1f}€"
+	    	f"Data Points: {len(activityDf)}\n"
+	    	f"Mean Average Active Days: {activityDf['AVG_DAYS_BETWEEN_PURCHASES'].mean():.1f}\n"
+	    	f"Mean Purchases: {activityDf[column].mean():.1f}€"
 		)
 	else:
 		statsText = (
 			f"Data Points: {len(activityDf)}\n"
-			f"Mean Active Days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+			f"Mean Average Active Days: {activityDf['AVG_DAYS_BETWEEN_PURCHASES'].mean():.1f}\n"
 			f"Mean {column.replace('_', ' ').lower()}: {activityDf[column].mean():.1f}"
 		)
 	
