@@ -14,8 +14,12 @@ def findPath():
 	filePath
 		the path to the `.csv` file
 	"""
-	directoryPath = os.path.dirname(os.path.abspath(__file__))
-	filePath = os.path.join(directoryPath, "dataset_for_datascience_assignment.csv")
+	# Get the directory of the current script (which will be in the source directory)
+	scriptDir = os.path.dirname(os.path.abspath(__file__))
+	# Navigate one level up to the task2 directory
+	task2Dir = os.path.dirname(scriptDir)
+	# Join with the path to the data file
+	filePath = os.path.join(task2Dir, "data", "dataset_for_datascience_assignment.csv")
 	return filePath
 
 def loadCsvData(file_path) -> pd.DataFrame:
