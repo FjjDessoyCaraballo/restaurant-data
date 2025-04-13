@@ -268,17 +268,17 @@ def activityPeriodCorrelation(df: pd.DataFrame, country: str=None) -> pd.DataFra
 	stats = {
 		'web': {
 			'Correlation': corrWeb.round(2),
-			'Mean Active Period': meanActivityPeriodWeb.round(2),
+			'Mean Active Period (days)': meanActivityPeriodWeb.round(2),
 			'Mean Purchases': meanPurchaseCountWeb.round(2),
 		},
 		'ios': {
 			'Correlation': corrIos.round(2),
-			'Mean Active Period': meanActivityPeriodIos.round(2),
+			'Mean Active Period (days)': meanActivityPeriodIos.round(2),
 			'Mean Purchases': meanPurchaseCountIos.round(2),
 		},
 		'android': {
 			'Correlation': corrAndroid.round(2),
-			'Mean Active Period': meanActivityPeriodAndroid.round(2),
+			'Mean Active Period (days)': meanActivityPeriodAndroid.round(2),
 			'Mean Purchases': meanPurchaseCountAndroid.round(2),
 		}
 	}
@@ -410,13 +410,13 @@ def scatterPlotActivityPeriod(df: pd.DataFrame, column: str=None, country: str=N
 	if column == "TOTAL_PURCHASE_EUR":
 		statsText = (
 	    	f"Data points: {len(activityDf)}\n"
-	    	f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+	    	f"Mean Active Days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
 	    	f"Mean purchases: {activityDf[column].mean():.1f}€"
 		)
 	else:
 		statsText = (
-			f"Data points: {len(activityDf)}\n"
-			f"Mean active days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
+			f"Data Points: {len(activityDf)}\n"
+			f"Mean Active Days: {activityDf['ACTIVE_DAYS'].mean():.1f}\n"
 			f"Mean {column.replace('_', ' ').lower()}: {activityDf[column].mean():.1f}"
 		)
 	

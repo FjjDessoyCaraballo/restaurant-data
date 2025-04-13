@@ -73,8 +73,6 @@ def	minMaxPurchase(df: pd.DataFrame, minOrMax: str):
 		}
 	}
 
-	print(minOrMax)
-
 	# convert stats into pandas dataframe format
 	statsDataframe = pd.DataFrame(stats)
 
@@ -101,6 +99,10 @@ def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	ax.axis('tight')
 	ax.axis('off')
 
+	for column in df.columns:
+		df[column] = df[column].astype(str) + "€"
+		
+
 	table = ax.table(
 		cellText=df.values,
 		colLabels=df.columns,
@@ -112,8 +114,8 @@ def plotPurchaseTable(df: pd.DataFrame, minOrMax: str) -> None:
 	table.auto_set_font_size(False)
 	table.set_fontsize(12)
 	table.scale(0.8, 2.0)
-	plt.title(f"Expenditure stats by platform {minOrMax}", pad=0.5)
-	
+	plt.title(f"Expenditure Stats By Platform: {minOrMax}", pad=0.5)
+
 	# layout adjustment
 	plt.tight_layout(pad=1.0)
 	plt.show()
@@ -194,8 +196,6 @@ def scatterPlotTotalPurchases(df: pd.DataFrame, os: str=None, country: str=None)
 	# enhancing readability
 	plt.xlabel('Days to First Purchase', fontsize=12)
 	plt.ylabel('Total Purchases (€)', fontsize=12)
-
-
 	
 	# change country ISO to proper name
 	if country:
