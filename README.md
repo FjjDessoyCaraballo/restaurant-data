@@ -5,11 +5,11 @@ For this assignment we were given two tasks. The first tasks is to create tables
 ## Directory tree
 
 ```bash
-├── Data Science Internship Assignment - 2025.pdf
 ├── README.md
+├── requirements.txt
 ├── task1
 │   ├── db
-│   │   ├── dbCreation.py
+│   │   └── dbCreation.py
 │   └── sql
 │       ├── queries
 │       │   ├── query1.sql
@@ -21,13 +21,15 @@ For this assignment we were given two tasks. The first tasks is to create tables
 └── task2
     ├── conversionOs.py
     ├── dataset_for_datascience_assignment.csv
+    ├── firstAndLast.py
     ├── firstPurchase.py
     ├── __init__.py
     ├── notebook.ipynb
     ├── osCountry.py
     ├── osSpending.py
     ├── parsing.py
-    └── task2.py
+    ├── task2.py
+    └── Wolt-data-presentation.pptx
 ```
 
 ## HOWTO
