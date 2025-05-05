@@ -1,4 +1,4 @@
-# Wolt data analyst internship assignment
+# Restaurant data
 
 For this assignment we were given two tasks. The first tasks is to create tables and queries according to the pdf provided. The second task is to create a whole report with visualizations based on the csv file provided named `dataset_for_datascience_assignment.csv`.
 
