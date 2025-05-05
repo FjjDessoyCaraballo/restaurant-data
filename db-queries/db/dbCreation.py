@@ -5,7 +5,7 @@ import uuid
 import os
 
 # Database filename
-db_file = 'wolt_mock.db'
+db_file = 'restaurant_mock.db'
 
 # Remove the existing database file if it exists
 if os.path.exists(db_file):
@@ -122,4 +122,4 @@ cursor.executemany('INSERT INTO Purchases VALUES (?, ?, ?, ?)', purchases)
 conn.commit()
 conn.close()
 
-print("Database 'wolt_mock.db' has been created successfully with sample data!")
+print("Database 'restaurant_mock.db' has been created successfully with sample data!")

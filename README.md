@@ -43,7 +43,7 @@ Execute the script with the following line:
 python3 dbCreation.py
 ```
 
-This line creates the database named `wolt_mock.db` using the tables from `tables.sql` inside `task1/sql/schema/`. Afterwards you can test the queries using the following commands (considering that you are in the same directory as the db)
+This line creates the database named `restaurant_mock.db` using the tables from `tables.sql` inside `task1/sql/schema/`. Afterwards you can test the queries using the following commands (considering that you are in the same directory as the db)
 
 Be sure to have SQLite3 installed on your device. If you are using Linux Ubuntu, you can use the following line:
 
@@ -60,10 +60,10 @@ brew install sqlite3
 After that, execute the following lines in CLI:
 
 ```bash
-sqlite3 wolt_mock.db < ../sql/queries/query1.sql
-sqlite3 wolt_mock.db < ../sql/queries/query2.sql
-sqlite3 wolt_mock.db < ../sql/queries/query3a.sql
-sqlite3 wolt_mock.db < ../sql/queries/query3b.sql
+sqlite3 restaurant_mock.db < ../sql/queries/query1.sql
+sqlite3 restaurant_mock.db < ../sql/queries/query2.sql
+sqlite3 restaurant_mock.db < ../sql/queries/query3a.sql
+sqlite3 restaurant_mock.db < ../sql/queries/query3b.sql
 ```
 
 ___
@@ -110,7 +110,7 @@ After running changes, you have to press the "run" button to apply the changes f
 
 ### About the data
 
-All data comes the csv file called `dataset_for_datascience_assignment.csv` which was provided by Wolt. The dataset here has no relation with task one.
+All data comes the csv file called `dataset_for_datascience_assignment.csv` which was provided by restaurant. The dataset here has no relation with task one.
 
 ### About the structure of the project
 
