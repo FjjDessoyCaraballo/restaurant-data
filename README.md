@@ -1,13 +1,27 @@
 # Restaurant data
 
-For this assignment we were given two tasks. The first tasks is to create tables and queries according to the pdf provided. The second task is to create a whole report with visualizations based on the csv file provided named `dataset_for_datascience_assignment.csv`.
+For this assignment we were given two tasks. The first tasks is to create tables and queries according to the pdf provided. The second task is to create a whole report with visualizations based on the csv file provided named `dataset.csv`.
 
 ## Directory tree
 
 ```bash
-├── README.md
-├── requirements.txt
-├── task1
+.
+├── data-exploration
+│   ├── data
+│   │   └── dataset.csv
+│   ├── presentation
+│   │   └── Wolt-data-presentation.pptx
+│   └── source
+│       ├── conversionOs.py
+│       ├── firstAndLast.py
+│       ├── firstPurchase.py
+│       ├── __init__.py
+│       ├── notebook.ipynb
+│       ├── osCountry.py
+│       ├── osSpending.py
+│       ├── parsing.py
+│       └── task2.py
+├── db-queries
 │   ├── db
 │   │   └── dbCreation.py
 │   └── sql
@@ -18,17 +32,8 @@ For this assignment we were given two tasks. The first tasks is to create tables
 │       │   └── query3b.sql
 │       └── schema
 │           └── tables.sql
-└── task2
-    ├── conversionOs.py
-    ├── dataset_for_datascience_assignment.csv
-    ├── firstAndLast.py
-    ├── firstPurchase.py
-    ├── __init__.py
-    ├── notebook.ipynb
-    ├── osCountry.py
-    ├── osSpending.py
-    ├── parsing.py
-    └── task2.py
+├── README.md
+└── requirements.txt
 ```
 
 ## HOWTO
@@ -110,7 +115,7 @@ After running changes, you have to press the "run" button to apply the changes f
 
 ### About the data
 
-All data comes the csv file called `dataset_for_datascience_assignment.csv` which was provided by restaurant. The dataset here has no relation with task one.
+All data comes the csv file called `dataset.csv` which was provided by restaurant. The dataset here has no relation with task one.
 
 ### About the structure of the project
 
