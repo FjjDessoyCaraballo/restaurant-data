@@ -28,8 +28,7 @@ For this assignment we were given two tasks. The first tasks is to create tables
     ├── osCountry.py
     ├── osSpending.py
     ├── parsing.py
-    ├── task2.py
-    └── Wolt-data-presentation.pptx
+    └── task2.py
 ```
 
 ## HOWTO
