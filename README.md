@@ -9,8 +9,6 @@ For this assignment we were given two tasks. The first tasks is to create tables
 ├── data-exploration
 │   ├── data
 │   │   └── dataset.csv
-│   ├── presentation
-│   │   └── Wolt-data-presentation.pptx
 │   └── source
 │       ├── conversionOs.py
 │       ├── firstAndLast.py
